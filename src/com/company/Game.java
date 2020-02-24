@@ -26,7 +26,8 @@ public abstract class Game implements KeyListener, MouseListener {
         frame.setVisible(true);
         frame.addKeyListener(this);
         frame.addMouseListener(this);
-        frame.setCursor(frame.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null"));
+//        frame.setCursor(frame.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null"));
+        frame.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         run();
     }
 

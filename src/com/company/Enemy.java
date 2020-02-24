@@ -11,6 +11,7 @@ public class Enemy extends Rectangle {
     private int velX = 2;
     private int velY = 2;
     private boolean left = (Math.random() * 2 + 1 % 2 == 0),right = (Math.random() * 2 + 1 % 2 == 0),up = (Math.random() * 2 + 1 % 2 == 0),down = (Math.random() * 2 + 1 % 2 == 0);
+    private boolean isTarget;
     public Enemy(int x, int y, int width, int height) {
         _width = width;
         _height = height;
@@ -31,33 +32,20 @@ public class Enemy extends Rectangle {
         if(down)_y += velY;
         else _y-= velY;
     }
-    public Enemy intersection(Enemy rect) {
-        boolean firstEncounter = true;
-        boolean widthCheck;
-        int coordx = 0;
-        int coordy = 0;
-        int counter = 0;
-        int height = 0;
-        int width = 0;
-        for (int x = _x; x < _x+_width; x++) {
-            widthCheck = true;
-            for (int y = _y; y < _y+_width; y++){
-                if(rect.contains(x,y)){
-                    counter++;
-                    if(widthCheck){
-                        widthCheck = false;
-                        width++;
-                    }
-                    if(firstEncounter){
-                        coordx = x;
-                        coordy = y;
-                        firstEncounter = false;
-                    }
-                }
-            }
+    public boolean intersection(Projectile rect) {
+        if((_y)<=(rect.get_y()+rect.get_height()) && (rect.get_y()+rect.get_height()<=_y+_height) && ((rect.get_x()+rect.get_width())>_x) && (rect.get_x()<(x+_width))){
+            return true;
         }
-        if(width != 0)height = counter/width;
-        return new Enemy(coordx, coordy, width, height);
+        if(rect.get_y()<=(_y+_height) && (rect.get_y()>=_y) && ((rect.get_x()+rect.get_width())>_x) && (rect.get_x()<(x+_width))) {
+            return true;
+        }
+        if((rect.get_x())<=(_x+_width) && (rect.get_x()>=_x) && (rect.get_y()<(_y+_height)) && ((rect.get_y()+rect.get_height())>y)){
+            return true;
+        }
+        if ((((rect.get_x()+rect.get_width()))>=_x) && (rect.get_x()<=x) && (rect.get_y()<(_y+_height)) && ((rect.get_y()+rect.get_height())>y)){
+            return true;
+        }
+        return false;
     }
     public void flipDirectionX(){
         if(left){
@@ -110,6 +98,10 @@ public class Enemy extends Rectangle {
     public void draw(Graphics pen, int listCounter, ArrayList<Enemy> enemyList){
         pen.fillRect(enemyList.get(listCounter).get_x(), enemyList.get(listCounter).get_y(), enemyList.get(listCounter).get_width(), enemyList.get(listCounter).get_height());
         pen.setColor(Color.RED);
+        if(isTarget){
+            pen.setColor(Color.blue);
+            pen.fillRect(enemyList.get(listCounter).get_x(), enemyList.get(listCounter).get_y(), enemyList.get(listCounter).get_width(), enemyList.get(listCounter).get_height());
+        }
     }
 
     public int get_height() {
@@ -136,6 +128,10 @@ public class Enemy extends Rectangle {
         return velY;
     }
 
+    public void setTarget(boolean target) {
+        isTarget = target;
+    }
+
     public void get_direction(){
         boolean horrizontal = false;
         boolean vertical = false;
@@ -151,5 +147,9 @@ public class Enemy extends Rectangle {
     }
     public String toString() {
         return "Enemy[x="+_x+",y="+_y+",width="+_width+",height="+_height+"]";
+    }
+
+    public boolean isTarget() {
+        return isTarget;
     }
 }

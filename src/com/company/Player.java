@@ -19,8 +19,8 @@ public class Player extends Rectangle {
     private int xVel = 5,yVel = 5;
     private ArrayList<Projectile> kevin = new ArrayList<>();
     private boolean dead;
-    private Enemy newRect;
     private int health;
+    private Enemy target;
     private String playerImg = "D:/Anderson/Junior Year/Java/w7/boat.png";
     private BufferedImage readImg =  ImageIO.read(new File(playerImg));
     public Player(int x, int y, int width, int height) throws IOException {
@@ -36,33 +36,27 @@ public class Player extends Rectangle {
         return (x >= _x) && (x <= _x + _width) && (y >= _y) && (y <= _y + _height);
     }
 
-    public Enemy intersection(Enemy rect) {
-        boolean firstEncounter = true;
-        boolean widthCheck = true;
-        int coordx = 0;
-        int coordy = 0;
-        int counter = 0;
-        int height = 0;
-        int width = 0;
-        for (int x = _x; x < _x+_width; x++) {
-            widthCheck = true;
-            for (int y = _y; y < _y+_width; y++){
-                if(rect.contains(x,y)){
-                    counter++;
-                    if(widthCheck){
-                        widthCheck = false;
-                        width++;
-                    }
-                    if(firstEncounter){
-                        coordx = x;
-                        coordy = y;
-                        firstEncounter = false;
-                    }
-                }
-            }
+    public boolean intersection(Projectile rect) {
+        if((_y)<=(rect.get_y()+rect.get_height()) && (rect.get_y()+rect.get_height()<=_y+_height) && ((rect.get_x()+rect.get_width())>_x) && (rect.get_x()<(x+_width))){
+            return true;
         }
-        if(width != 0)height = counter/width;
-        return newRect = new Enemy(coordx, coordy, width, height);
+        if(rect.get_y()<=(_y+_height) && (rect.get_y()>=_y) && ((rect.get_x()+rect.get_width())>_x) && (rect.get_x()<(x+_width))) {
+            return true;
+        }
+        if((rect.get_x())<=(_x+_width) && (rect.get_x()>=_x) && (rect.get_y()<(_y+_height)) && ((rect.get_y()+rect.get_height())>y)){
+            return true;
+        }
+        if ((((rect.get_x()+rect.get_width()))>=_x) && (rect.get_x()<=x) && (rect.get_y()<(_y+_height)) && ((rect.get_y()+rect.get_height())>y)){
+            return true;
+        }
+        return false;
+    }
+    public void setTarget(Enemy target){
+        this.target = target;
+    }
+
+    public Enemy getTarget() {
+        return target;
     }
 
     public void move(String direction){
@@ -90,8 +84,10 @@ public class Player extends Rectangle {
         health = 5;
         dead = false;
     }
-    public void shoot(String direction) throws IOException {
-        kevin.add(new Projectile(this._x + (this.get_width() / 2)-10, this._y + (this.get_height() / 2), 20, 20, direction));
+    public void shoot(String direction, Player parent) throws IOException {
+        Projectile newBullet = new Projectile(this._x + (this.get_width() / 2)-10, this._y + (this.get_height() / 2), 20, 20, direction);
+        newBullet.setParent(this);
+        kevin.add(newBullet);
     }
 
     public void draw(Graphics pen) throws IOException {

@@ -10,13 +10,15 @@ public class Projectile extends Rectangle{
      private int _height;
 
      //    Top Left
+     private Player parent;
      private int _x;
      private int _y;
      private int velX = 20;
      private int velY = 20;
+     private Enemy target;
      private String _direction;
-     private String playerImg = "D:/Anderson/Junior Year/Java/w7/shot.png";
-     private BufferedImage readImg =  ImageIO.read(new File(playerImg));
+//     private String playerImg = "D:/Anderson/Junior Year/Java/w7/shot.png";
+//     private BufferedImage readImg =  ImageIO.read(new File(playerImg));
 //    Bottom Right
 //    _xbr = _x+_width;
 //    _ybr = _y+_height;
@@ -36,58 +38,58 @@ public class Projectile extends Rectangle{
          _y = y;
          _direction = direction;
      }
+     public void setParent(Player player){
+         parent = player;
+         target = player.getTarget();
+     }
 
      public boolean contains(int x, int y) {
          return (x >= _x) && (x <= _x + _width) && (y >= _y) && (y <= _y + _height);
      }
-
-//     public Player intersection(Enemy rect) throws IOException {
-//         Player newRect;
-//         boolean firstEncounter = true;
-//         boolean widthCheck = true;
-//         int coordx = 0;
-//         int coordy = 0;
-//         int counter = 0;
-//         int height = 0;
-//         int width = 0;
-//         for (int x = _x; x < _x + _width; x++) {
-//             widthCheck = true;
-//             for (int y = _y; y < _y + _width; y++) {
-//                 if (rect.contains(x, y)) {
-//                     counter++;
-//                     if (widthCheck) {
-//                         widthCheck = false;
-//                         width++;
-//                     }
-//                     if (firstEncounter) {
-//                         coordx = x;
-//                         coordy = y;
-//                         firstEncounter = false;
-//                     }
-//                 }
-//             }
-//         }
-//         if (width != 0) height = counter / width;
-//         return newRect = new Player(coordx, coordy, width, height);
-//     }
+    public boolean myIntersection(Enemy rect) {
+        if((y)<=(rect.getY()+rect.getHeight()) && (rect.getY()+rect.getHeight()<=y+height) && ((rect.getX()+rect.getWidth())>x) && (rect.getX()<(x+width))){
+            return true;
+        }
+       if(rect.getY()<=(y+height) && (rect.getY()>=y) && ((rect.getX()+rect.getWidth())>x) && (rect.getX()<(x+width))) {
+            return true;
+        }
+       if((rect.getX())<=(x+width) && (rect.getX()>=x) && (rect.getY()<(y+height)) && ((rect.getY()+rect.getHeight())>y)){
+            return true;
+        }
+        if ((((rect.getX()+rect.getWidth()))>=x) && (rect.getX()<=x) && (rect.getY()<(y+height)) && ((rect.getY()+rect.getHeight())>y)){
+            return true;
+        }
+        return false;
+    }
 
      public void move() {
          if(_direction.equals("left")){
              _x+=velX;
          }
-         if(_direction.equals("right")){
+         else if(_direction.equals("right")){
              _x-=velX;
          }
-         if(_direction.equals("up")){
+         else if(_direction.equals("up")){
              _y-=velY;
          }
-         if(_direction.equals("down")){
+         else if(_direction.equals("down")){
              _y+=velY;
          }
+         else if(_direction.equals("target")){
+             _x -= (parent.get_x()-target.get_x())/30;
+             _y -= (parent.get_y()-target.get_y())/30;
+         }
      }
+//     public void target(Enemy target){
+//         this.target = target;
+//     }
+//     public void target(Player target){
+//
+//     }
      public void draw(Graphics pen){
          pen.setColor(Color.yellow);
-         pen.drawImage(readImg,_x,_y,_width,_height+3,null);
+         pen.fillRect(_x,_y,_width,_height);
+//         pen.drawImage(readImg,_x,_y,_width,_height+3,null);
 
      }
 

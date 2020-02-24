@@ -17,13 +17,14 @@ public class MyGame extends Game {
     public static final int SCREEN_HEIGHT = 1050;
     private boolean hitCap = false,alive = true;
     private boolean start = true;
-    private int pX = 250,pY = 250;
+    private int pX = 240,pY = 250;
     private int enemyCount = 0;
     private ArrayList<Enemy> enemyList = new ArrayList<>();
     private Player playerRect = new Player(pX,pY,10,10);
     private int count = 0,secondsLived = 0,shootTime = 0;
     private boolean moveUp,moveDown,moveLeft,moveRight;
     private BufferedImage readImg = ImageIO.read(new File("/D://Anderson/Junior Year/Java/w7/maxresdefault.jpg/"));
+    private boolean targetSet;
     public MyGame() throws IOException {
         enemyList.add(new Enemy((int)(Math.random()*1100+1),(int)(Math.random()*750+1),75,75));
     }
@@ -48,14 +49,17 @@ public class MyGame extends Game {
                 if (enemyList.size() > 0) {
                     for (int x = 0; x < enemyCount + 1; x++) {
                         for (int y = 0; y < playerRect.getKevin().size(); y++) {
-                            System.out.println(playerRect.getKevin().get(y).intersects(enemyList.get(x)));
-                            if (playerRect.getKevin().get(y).intersects(enemyList.get(x))  /*ion(enemyList.get(x)).get_height() != 0*/) {
-                                System.out.println("I hit the enemy");
+//                            System.out.println(playerRect.getKevin().get(y).myIntersection(enemyList.get(x)));
+                            if (enemyList.size()!=0 && enemyList.get(x).intersection(playerRect.getKevin().get(y))){
+                                playerRect.getKevin().remove(y);
+                                enemyCount--;
+                                if(enemyList.get(x).isTarget()){
+                                    targetSet = false;
+                                }
                                 enemyList.remove(x);
+                            }
+                            else if (playerRect.getKevin().get(y).get_y() < 0) {
                                 playerRect.getKevin().remove(y);
-                            } else if (playerRect.getKevin().get(y).get_y() < 0) {
-                                playerRect.getKevin().remove(y);
-                                System.out.println("I have left the screen ");
                             }
                         }
                     }
@@ -158,6 +162,7 @@ public class MyGame extends Game {
         if(ke.getKeyCode() == KeyEvent.VK_F){
             start = false;
         }
+
     }
 
     @Override
@@ -183,11 +188,23 @@ public class MyGame extends Game {
     @Override
     public void mousePressed(MouseEvent me) {
         if(me.isShiftDown()){
-            System.out.println("bang");
+            if(!targetSet) {
+                System.out.println("bang");
+                playerRect.setTarget(enemyList.get(0));
+                enemyList.get(0).setTarget(true);
+                targetSet = true;
+            }
+            else{
+                targetSet = false;
+                enemyList.get(0).setTarget(false);
+            }
         }
         else {
             try {
-                playerRect.shoot("up");
+                if(targetSet)
+                    playerRect.shoot("target",playerRect);
+                else
+                    playerRect.shoot("up",playerRect);
             } catch (IOException e) {
                 e.printStackTrace();
             }
