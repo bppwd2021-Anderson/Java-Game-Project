@@ -1,0 +1,143 @@
+package com.company;
+/*TODO
+*  Take projectiles from MyGame and bring them in here
+*  idk finish it
+* */
+
+import org.w3c.dom.css.Rect;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class Player extends Rectangle {
+    private int _width,_height;
+    public int _x,_y;
+    private int xVel = 5,yVel = 5;
+    private ArrayList<Projectile> kevin = new ArrayList<>();
+    private boolean dead;
+    private Enemy newRect;
+    private int health;
+    private String playerImg = "D:/Anderson/Junior Year/Java/w7/boat.png";
+    private BufferedImage readImg =  ImageIO.read(new File(playerImg));
+    public Player(int x, int y, int width, int height) throws IOException {
+        _width = width;
+        _height = height;
+        _x = x;
+        _y = y;
+        health = 5;
+
+    }
+
+    public boolean contains(int x, int y) {
+        return (x >= _x) && (x <= _x + _width) && (y >= _y) && (y <= _y + _height);
+    }
+
+    public Enemy intersection(Enemy rect) {
+        boolean firstEncounter = true;
+        boolean widthCheck = true;
+        int coordx = 0;
+        int coordy = 0;
+        int counter = 0;
+        int height = 0;
+        int width = 0;
+        for (int x = _x; x < _x+_width; x++) {
+            widthCheck = true;
+            for (int y = _y; y < _y+_width; y++){
+                if(rect.contains(x,y)){
+                    counter++;
+                    if(widthCheck){
+                        widthCheck = false;
+                        width++;
+                    }
+                    if(firstEncounter){
+                        coordx = x;
+                        coordy = y;
+                        firstEncounter = false;
+                    }
+                }
+            }
+        }
+        if(width != 0)height = counter/width;
+        return newRect = new Enemy(coordx, coordy, width, height);
+    }
+
+    public void move(String direction){
+        if(direction.equals("up")){
+            _y-=yVel;
+        }
+        if(direction.equals("down")){
+            _y+=yVel;
+        }
+        if(direction.equals("left")){
+            _x-=xVel;
+        }
+        if(direction.equals("right")){
+            _x+=xVel;
+        }
+    }
+    public void healthLoss(){
+        health --;
+    }
+    public void kill(){
+        dead = true;
+        health-=5;
+    }
+    public void restart(){
+        health = 5;
+        dead = false;
+    }
+    public void shoot(String direction) throws IOException {
+        kevin.add(new Projectile(this._x + (this.get_width() / 2)-10, this._y + (this.get_height() / 2), 20, 20, direction));
+    }
+
+    public void draw(Graphics pen) throws IOException {
+        pen.drawImage(readImg,_x-26,_y-25,_width+50,_height+50 ,null);
+        pen.fillRect(_x,_y,_width,_height);
+        pen.setColor(Color.black);
+        pen.drawRect(_x,_y,_width,_height);
+        pen.drawRect(_x+1,_y+1,_width-2,_height-2);
+        for (int i = 0; i < kevin.size(); i++) {
+            kevin.get(i).move();
+            kevin.get(i).draw(pen);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Player[x="+_x+",y="+_y+",width="+_width+",height="+_height+"]";
+    }
+
+    public int get_health() {
+        return health;
+    }
+
+    public boolean isDead(){
+        return dead;
+    }
+
+    public int get_height() {
+        return _height;
+    }
+    public int get_width() {
+        return _width;
+    }
+
+    public ArrayList<Projectile> getKevin() {
+        return kevin;
+    }
+
+    public String getPlayerImg() {
+        return playerImg;
+    }
+
+    public int get_x() {
+        return _x;
+    }
+    public int get_y() {
+        return _y;
+    }
+}
