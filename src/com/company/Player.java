@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Player extends Rectangle {
+public class Player implements Entity {
     private int _width,_height;
     public int _x,_y;
     private int xVel = 5,yVel = 5;
@@ -36,17 +36,17 @@ public class Player extends Rectangle {
         return (x >= _x) && (x <= _x + _width) && (y >= _y) && (y <= _y + _height);
     }
 
-    public boolean intersection(Projectile rect) {
-        if((_y)<=(rect.get_y()+rect.get_height()) && (rect.get_y()+rect.get_height()<=_y+_height) && ((rect.get_x()+rect.get_width())>_x) && (rect.get_x()<(x+_width))){
+    public boolean intersects(Entity rect) {
+        if((_y)<=(rect.get_y()+rect.get_height()) && (rect.get_y()+rect.get_height()<=_y+_height) && ((rect.get_x()+rect.get_width())>_x) && (rect.get_x()<(_x+_width))){
             return true;
         }
-        if(rect.get_y()<=(_y+_height) && (rect.get_y()>=_y) && ((rect.get_x()+rect.get_width())>_x) && (rect.get_x()<(x+_width))) {
+        if(rect.get_y()<=(_y+_height) && (rect.get_y()>=_y) && ((rect.get_x()+rect.get_width())>_x) && (rect.get_x()<(_x+_width))) {
             return true;
         }
-        if((rect.get_x())<=(_x+_width) && (rect.get_x()>=_x) && (rect.get_y()<(_y+_height)) && ((rect.get_y()+rect.get_height())>y)){
+        if((rect.get_x())<=(_x+_width) && (rect.get_x()>=_x) && (rect.get_y()<(_y+_height)) && ((rect.get_y()+rect.get_height())>_y)){
             return true;
         }
-        if ((((rect.get_x()+rect.get_width()))>=_x) && (rect.get_x()<=x) && (rect.get_y()<(_y+_height)) && ((rect.get_y()+rect.get_height())>y)){
+        if ((((rect.get_x()+rect.get_width()))>=_x) && (rect.get_x()<=_x) && (rect.get_y()<(_y+_height)) && ((rect.get_y()+rect.get_height())>_y)){
             return true;
         }
         return false;
@@ -84,8 +84,8 @@ public class Player extends Rectangle {
         health = 5;
         dead = false;
     }
-    public void shoot(String direction, Player parent) throws IOException {
-        Projectile newBullet = new Projectile(this._x + (this.get_width() / 2)-10, this._y + (this.get_height() / 2), 20, 20, direction);
+    public void shoot(String direction, Entity parent) throws IOException {
+        Projectile newBullet = new Projectile(this._x + (this.get_width() / 2)-10, this._y + (this.get_height() / 2), 10, 10, direction);
         newBullet.setParent(this);
         kevin.add(newBullet);
     }
@@ -133,6 +133,7 @@ public class Player extends Rectangle {
     public int get_x() {
         return _x;
     }
+
     public int get_y() {
         return _y;
     }

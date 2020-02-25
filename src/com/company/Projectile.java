@@ -5,12 +5,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Projectile extends Rectangle{
+public class Projectile implements Entity{
      private int _width;
      private int _height;
 
      //    Top Left
-     private Player parent;
+     private Entity parent;
      private int _x;
      private int _y;
      private int velX = 20;
@@ -38,29 +38,15 @@ public class Projectile extends Rectangle{
          _y = y;
          _direction = direction;
      }
-     public void setParent(Player player){
-         parent = player;
-         target = player.getTarget();
+     public void setParent(Entity parent){
+         this.parent = parent;
+         if(parent instanceof Player)
+             target = ((Player) parent).getTarget();
      }
 
      public boolean contains(int x, int y) {
          return (x >= _x) && (x <= _x + _width) && (y >= _y) && (y <= _y + _height);
      }
-    public boolean myIntersection(Enemy rect) {
-        if((y)<=(rect.getY()+rect.getHeight()) && (rect.getY()+rect.getHeight()<=y+height) && ((rect.getX()+rect.getWidth())>x) && (rect.getX()<(x+width))){
-            return true;
-        }
-       if(rect.getY()<=(y+height) && (rect.getY()>=y) && ((rect.getX()+rect.getWidth())>x) && (rect.getX()<(x+width))) {
-            return true;
-        }
-       if((rect.getX())<=(x+width) && (rect.getX()>=x) && (rect.getY()<(y+height)) && ((rect.getY()+rect.getHeight())>y)){
-            return true;
-        }
-        if ((((rect.getX()+rect.getWidth()))>=x) && (rect.getX()<=x) && (rect.getY()<(y+height)) && ((rect.getY()+rect.getHeight())>y)){
-            return true;
-        }
-        return false;
-    }
 
      public void move() {
          if(_direction.equals("left")){
@@ -75,7 +61,7 @@ public class Projectile extends Rectangle{
          else if(_direction.equals("down")){
              _y+=velY;
          }
-         else if(_direction.equals("target")){
+         else if(parent instanceof Player && _direction.equals("target")){
              _x -= (parent.get_x()-target.get_x())/30;
              _y -= (parent.get_y()-target.get_y())/30;
          }
@@ -118,7 +104,13 @@ public class Projectile extends Rectangle{
          return _x;
      }
 
-     public int get_y() {
+    @Override
+    public boolean intersects(Entity bullet) {
+        return false;
+    }
+
+
+    public int get_y() {
          return _y;
      }
  }

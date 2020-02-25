@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-// TODO: 2/7/2020 Fix framerate issues caused by bullet-enemy collision detection
+// TODO: 2/25/20: Allow enemies to shoot; Create enemy waves
 
 public class MyGame extends Game {
 
@@ -21,17 +21,20 @@ public class MyGame extends Game {
     private int enemyCount = 0;
     private ArrayList<Enemy> enemyList = new ArrayList<>();
     private Player playerRect = new Player(pX,pY,10,10);
-    private int count = 0,secondsLived = 0,shootTime = 0;
+    private int count = 0,secondsLived = 0/*,shootTime = 0*/;
     private boolean moveUp,moveDown,moveLeft,moveRight;
     private BufferedImage readImg = ImageIO.read(new File("/D://Anderson/Junior Year/Java/w7/maxresdefault.jpg/"));
-    private boolean targetSet;
+    private boolean targetSet,rightClickPressed;
+    private boolean shoot;
     public MyGame() throws IOException {
-        enemyList.add(new Enemy((int)(Math.random()*1100+1),(int)(Math.random()*750+1),75,75));
+//        (int)(Math.random()*1100+1),(int)(Math.random()*750+1)
+        enemyList.add(new Enemy(100,100,75,75));
     }
     public void update() throws IOException {
+        System.out.println(rightClickPressed);
         if(!start) {
             boolean loseHealth = false;
-            shootTime++;
+//            shootTime++;
             try {
                 for (int i = 0; i < enemyCount + 1; i++) {
                     if (playerRect.intersects(enemyList.get(i))) {
@@ -41,16 +44,23 @@ public class MyGame extends Game {
             } catch (Exception e) {
                 System.out.println("Error2: " + e);
             }
-//        RunPython run = new RunPython();
+            if(shoot) {
+                try {
+                        playerRect.shoot("up", playerRect);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else if (rightClickPressed&&targetSet)
+                playerRect.shoot("target", playerRect);
             if (loseHealth && count % 15 == 0) {
                 playerRect.healthLoss();
             }
-//            if (count % 0 == 0) {
                 if (enemyList.size() > 0) {
                     for (int x = 0; x < enemyCount + 1; x++) {
                         for (int y = 0; y < playerRect.getKevin().size(); y++) {
-//                            System.out.println(playerRect.getKevin().get(y).myIntersection(enemyList.get(x)));
-                            if (enemyList.size()!=0 && enemyList.get(x).intersection(playerRect.getKevin().get(y))){
+                            if (enemyList.size()!=0 && enemyList.get(x).intersects(playerRect.getKevin().get(y))){
                                 playerRect.getKevin().remove(y);
                                 enemyCount--;
                                 if(enemyList.get(x).isTarget()){
@@ -89,7 +99,7 @@ public class MyGame extends Game {
                 try {
                     for (int listCounter = 0; listCounter < enemyCount + 1; listCounter++) {
                         enemyList.get(listCounter).draw(pen, listCounter, enemyList);
-                        enemyList.get(listCounter).move();
+//                        enemyList.get(listCounter).move();
                     }
                 } catch (Exception e) {
                     System.out.println("Error3:  " + e);
@@ -109,9 +119,6 @@ public class MyGame extends Game {
                 if (playerRect.get_health() > 0) {
                     pen.setColor(Color.black);
                     pen.setFont(new Font("ZapfDingbats", Font.PLAIN, 20));
-//            pen.drawString("Enemies: " + (enemyCount + 1), 100, 700);
-//            pen.drawString("X Speed: " + enemyList[0].getVelX() + "  Y Speed: " + enemyList[0].getVelY(), 100, 800);
-//            pen.drawString("Health: " + playerRect.get_health(), 100, 900);
                 } else {
                     alive = false;
                     pen.setColor(Color.black);
@@ -129,9 +136,7 @@ public class MyGame extends Game {
 
     @Override
     public void keyPressed(KeyEvent ke) {
-        if(ke.getKeyCode() == KeyEvent.VK_9){
-//            System.out.println(playerRect.intersects((double)enemyList.get(0).get_x(),(double)enemyList.get(0).get_y(),(double)enemyList.get(0).get_width(),(double)enemyList.get(0).get_height()));
-        }
+//        if(ke.getKeyCode() == KeyEvent.VK_9){ }
         if (ke.getKeyCode() == 10) {
             if(playerRect.isDead()) {
                 alive = true;
@@ -187,7 +192,7 @@ public class MyGame extends Game {
 
     @Override
     public void mousePressed(MouseEvent me) {
-        if(me.isShiftDown()){
+        if(me.isShiftDown() && me.getButton() == MouseEvent.BUTTON3){
             if(!targetSet) {
                 System.out.println("bang");
                 playerRect.setTarget(enemyList.get(0));
@@ -199,20 +204,19 @@ public class MyGame extends Game {
                 enemyList.get(0).setTarget(false);
             }
         }
+        else if(me.getButton() == MouseEvent.BUTTON3){
+            rightClickPressed = true;
+        }
         else {
-            try {
-                if(targetSet)
-                    playerRect.shoot("target",playerRect);
-                else
-                    playerRect.shoot("up",playerRect);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            shoot = true;
         }
     }
 
     @Override
-    public void mouseReleased(MouseEvent me) {}
+    public void mouseReleased(MouseEvent me) {
+        shoot = false;
+        rightClickPressed = false;
+    }
 
     @Override
     public void mouseEntered(MouseEvent me) {
