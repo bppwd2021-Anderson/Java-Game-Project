@@ -84,7 +84,7 @@ public class Player implements Entity {
         health = 5;
         dead = false;
     }
-    public void shoot(String direction, Entity parent) throws IOException {
+    public void shoot(String direction) throws IOException {
         Projectile newBullet = new Projectile(this._x + (this.get_width() / 2)-10, this._y + (this.get_height() / 2), 10, 10, direction);
         newBullet.setParent(this);
         kevin.add(newBullet);

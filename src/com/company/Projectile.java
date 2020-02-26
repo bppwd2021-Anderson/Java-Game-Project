@@ -19,17 +19,6 @@ public class Projectile implements Entity{
      private String _direction;
 //     private String playerImg = "D:/Anderson/Junior Year/Java/w7/shot.png";
 //     private BufferedImage readImg =  ImageIO.read(new File(playerImg));
-//    Bottom Right
-//    _xbr = _x+_width;
-//    _ybr = _y+_height;
-
-//    Bottom Left
-//    _xbl = _x;d
-//    _ybl = _y+_height;
-
-//    Top Right
-//    _xtr = _x+_width;
-//    _ytr = _y;
 
      public Projectile(int x, int y, int width, int height, String direction) throws IOException {
          _width = width;
@@ -72,8 +61,8 @@ public class Projectile implements Entity{
 //     public void target(Player target){
 //
 //     }
-     public void draw(Graphics pen){
-         pen.setColor(Color.yellow);
+     public void draw(Graphics pen, Color color){
+         pen.setColor(color);
          pen.fillRect(_x,_y,_width,_height);
 //         pen.drawImage(readImg,_x,_y,_width,_height+3,null);
 

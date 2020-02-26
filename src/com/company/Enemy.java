@@ -50,6 +50,12 @@ public class Enemy implements Entity {
         }
         return false;
     }
+    public void shoot(String direction) throws IOException {
+        Projectile newBullet = new Projectile(this._x + (this.get_width() / 2)-10, this._y + (this.get_height() / 2), 15, 15, direction);
+        newBullet.setParent(this);
+        kevin.add(newBullet);
+    }
+
     public void flipDirectionX(){
         if(left){
             right = true;
@@ -111,6 +117,11 @@ public class Enemy implements Entity {
             pen.setColor(Color.blue);
             pen.fillRect(enemyList.get(listCounter).get_x(), enemyList.get(listCounter).get_y(), enemyList.get(listCounter).get_width(), enemyList.get(listCounter).get_height());
         }
+        for (Projectile bullet:kevin) {
+            bullet.move();
+            bullet.draw(pen);
+            System.out.println("drawing a bullet");
+        }
     }
 
     public int get_height() {
@@ -136,6 +147,10 @@ public class Enemy implements Entity {
 
     public int getVelY() {
         return velY;
+    }
+
+    public ArrayList<Projectile> getKevin() {
+        return kevin;
     }
 
     public void setTarget(boolean target) {

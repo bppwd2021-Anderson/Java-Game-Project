@@ -31,7 +31,7 @@ public class MyGame extends Game {
         enemyList.add(new Enemy(100,100,75,75));
     }
     public void update() throws IOException {
-        System.out.println(rightClickPressed);
+//        System.out.println(rightClickPressed);
         if(!start) {
             boolean loseHealth = false;
 //            shootTime++;
@@ -46,14 +46,14 @@ public class MyGame extends Game {
             }
             if(shoot) {
                 try {
-                        playerRect.shoot("up", playerRect);
+                        playerRect.shoot("up");
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             else if (rightClickPressed&&targetSet)
-                playerRect.shoot("target", playerRect);
+                playerRect.shoot("target");
             if (loseHealth && count % 15 == 0) {
                 playerRect.healthLoss();
             }
@@ -74,6 +74,12 @@ public class MyGame extends Game {
                         }
                     }
                 }
+            for (Enemy enemy:enemyList) {
+                for(Projectile bullet:enemy.getKevin())
+                if(playerRect.intersects(bullet)){
+                    playerRect.kill();
+                }
+            }
 //            }
                 count++;
                 if (alive && count % 60 == 0) {
@@ -166,6 +172,13 @@ public class MyGame extends Game {
         }
         if(ke.getKeyCode() == KeyEvent.VK_F){
             start = false;
+        }
+        if(ke.getKeyCode() == KeyEvent.VK_Q){
+            try {
+                enemyList.get(0).shoot("down");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
