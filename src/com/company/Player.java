@@ -98,7 +98,7 @@ public class Player implements Entity {
         pen.drawRect(_x+1,_y+1,_width-2,_height-2);
         for (int i = 0; i < kevin.size(); i++) {
             kevin.get(i).move();
-            kevin.get(i).draw(pen);
+            kevin.get(i).draw(pen,Color.yellow);
         }
     }
 

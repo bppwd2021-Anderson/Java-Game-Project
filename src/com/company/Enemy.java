@@ -119,9 +119,9 @@ public class Enemy implements Entity {
         }
         for (Projectile bullet:kevin) {
             bullet.move();
-            bullet.draw(pen);
-            System.out.println("drawing a bullet");
+            bullet.draw(pen,Color.CYAN);
         }
+        System.out.println(kevin.size());
     }
 
     public int get_height() {

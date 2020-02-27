@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import static java.lang.StrictMath.E;
+
 // TODO: 2/25/20: Allow enemies to shoot; Create enemy waves
 
 public class MyGame extends Game {
@@ -74,10 +76,14 @@ public class MyGame extends Game {
                         }
                     }
                 }
-            for (Enemy enemy:enemyList) {
-                for(Projectile bullet:enemy.getKevin())
-                if(playerRect.intersects(bullet)){
-                    playerRect.kill();
+            for (int x = 0; x < enemyCount + 1; x++) {
+                for (int y = 0; y < enemyList.get(x).getKevin().size(); y++) {
+                    if (playerRect.intersects(enemyList.get(x).getKevin().get(y))) {
+                        playerRect.kill();
+                    }
+                    else if(enemyList.get(x).getKevin().get(y).get_y()>SCREEN_HEIGHT && enemyList.get(x).getKevin().size() != 0){
+                        enemyList.get(x).getKevin().remove(enemyList.get(x).getKevin().get(y));
+                    }
                 }
             }
 //            }
@@ -94,7 +100,7 @@ public class MyGame extends Game {
                 playerRect.draw(pen);
                 pen.setColor(Color.BLACK);
                 pen.drawRect(40,475,750,60);
-                pen.drawString("That white box in the middle of this ship is your core, don't let it get hurt okay? The rest of your ship can get hurt as much as it wants ",50,500);
+                pen.drawString("That white box in the middle of this ship is your core, don't let it get hurt okay? The rest of your ship is impervious to damage ",50,500);
                 pen.drawString("press [F] to start",350,525);
             }
             else {
@@ -205,16 +211,19 @@ public class MyGame extends Game {
 
     @Override
     public void mousePressed(MouseEvent me) {
-        if(me.isShiftDown() && me.getButton() == MouseEvent.BUTTON3){
-            if(!targetSet) {
-                System.out.println("bang");
-                playerRect.setTarget(enemyList.get(0));
-                enemyList.get(0).setTarget(true);
-                targetSet = true;
-            }
-            else{
-                targetSet = false;
-                enemyList.get(0).setTarget(false);
+        if(me.isShiftDown() && me.getButton() == MouseEvent.BUTTON3) {
+            try {
+                if (!targetSet) {
+                    System.out.println("bang");
+                    playerRect.setTarget(enemyList.get(0));
+                    enemyList.get(0).setTarget(true);
+                    targetSet = true;
+                } else {
+                    targetSet = false;
+                    enemyList.get(0).setTarget(false);
+                }
+            }catch (Exception e){
+                System.out.println("Error Mouse 3 "+e);
             }
         }
         else if(me.getButton() == MouseEvent.BUTTON3){
@@ -238,7 +247,6 @@ public class MyGame extends Game {
     @Override
     public void mouseExited(MouseEvent me) {
     }
-
     //Launches the Game
     public static void main(String[] args)throws IOException { new MyGame().start(TITLE, SCREEN_WIDTH,SCREEN_HEIGHT); }
 
