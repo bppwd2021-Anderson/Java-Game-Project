@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Player implements Entity {
+public class Player implements Entity,Shootable {
     private int _width,_height;
     public int _x,_y;
     private int xVel = 5,yVel = 5;
@@ -51,6 +51,12 @@ public class Player implements Entity {
         }
         return false;
     }
+
+    @Override
+    public void createBullet(Projectile projectile) {
+        kevin.add(projectile);
+    }
+
     public void setTarget(Enemy target){
         this.target = target;
     }
@@ -84,8 +90,22 @@ public class Player implements Entity {
         health = 5;
         dead = false;
     }
-    public void shoot(String direction) throws IOException {
-        Projectile newBullet = new Projectile(this._x + (this.get_width() / 2)-10, this._y + (this.get_height() / 2), 10, 10, direction);
+    public void shoot(String type) throws IOException {
+        Projectile newBullet;
+        switch (type) {
+            case "burst":
+                newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -20, this);
+                break;
+            case "bounce":
+                newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -20, this);
+                break;
+            case "Tracking":
+                newBullet = new Tracking(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -20, this);
+                break;
+            default:
+                newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -20, this);
+                break;
+        }
         newBullet.setParent(this);
         kevin.add(newBullet);
     }

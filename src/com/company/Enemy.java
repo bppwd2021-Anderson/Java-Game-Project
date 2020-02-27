@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Enemy implements Entity {
+public class Enemy implements Entity,Shootable {
     private int _width;
     private int _height;
     private int _x;
@@ -50,8 +50,28 @@ public class Enemy implements Entity {
         }
         return false;
     }
-    public void shoot(String direction) throws IOException {
-        Projectile newBullet = new Projectile(this._x + (this.get_width() / 2)-10, this._y + (this.get_height() / 2), 15, 15, direction);
+
+    @Override
+    public void createBullet(Projectile projectile) {
+        kevin.add(projectile);
+    }
+
+    public void shoot(String type) throws IOException {
+        Projectile newBullet;
+        switch (type) {
+            case "burst":
+                newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
+                break;
+            case "bounce":
+                newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
+                break;
+            case "Tracking":
+                newBullet = new Tracking(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
+                break;
+            default:
+                newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
+                break;
+        }
         newBullet.setParent(this);
         kevin.add(newBullet);
     }
@@ -76,12 +96,6 @@ public class Enemy implements Entity {
             up = true;
         }
     }
-    public void shoot(String direction, Enemy parent) throws IOException {
-        Projectile newBullet = new Projectile(this._x + (this.get_width() / 2)-10, this._y + (this.get_height() / 2), 10, 10, direction);
-        newBullet.setParent(this);
-        kevin.add(newBullet);
-
-    }
     public void checkBoundaries(){
         if(_x+velX >= 840){
             right = false;
@@ -101,15 +115,8 @@ public class Enemy implements Entity {
             up = true;
         }
     }
-    //    _x+(int)(Math.random()*100+1) >= 1149
+//    _x+(int)(Math.random()*100+1) >= 1149
 //    _y+randomY >= 749
-    public boolean contains(int x, int y) {
-        return (x >= _x) && (x <= _x + _width) && (y >= _y) && (y <= _y + _height);
-    }
-    public void speedUp(){
-        velX+=1;
-        velY+=1;
-    }
     public void draw(Graphics pen, int listCounter, ArrayList<Enemy> enemyList){
         pen.fillRect(enemyList.get(listCounter).get_x(), enemyList.get(listCounter).get_y(), enemyList.get(listCounter).get_width(), enemyList.get(listCounter).get_height());
         pen.setColor(Color.RED);
@@ -121,7 +128,7 @@ public class Enemy implements Entity {
             bullet.move();
             bullet.draw(pen,Color.CYAN);
         }
-        System.out.println(kevin.size());
+//        System.out.println(kevin.size());
     }
 
     public int get_height() {

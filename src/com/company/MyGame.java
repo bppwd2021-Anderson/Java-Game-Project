@@ -10,7 +10,9 @@ import java.awt.event.MouseEvent;
 
 import static java.lang.StrictMath.E;
 
-// TODO: 2/25/20: Allow enemies to shoot; Create enemy waves
+/* TODO: 2/25/20: Allow enemies to shoot; Create enemy waves
+*   Go to Khan Academy
+* */
 
 public class MyGame extends Game {
 
@@ -48,14 +50,14 @@ public class MyGame extends Game {
             }
             if(shoot) {
                 try {
-                        playerRect.shoot("up");
+                        playerRect.shoot("default");
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             else if (rightClickPressed&&targetSet)
-                playerRect.shoot("target");
+//                playerRect.shoot("target");
             if (loseHealth && count % 15 == 0) {
                 playerRect.healthLoss();
             }
@@ -181,10 +183,13 @@ public class MyGame extends Game {
         }
         if(ke.getKeyCode() == KeyEvent.VK_Q){
             try {
-                enemyList.get(0).shoot("down");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                enemyList.get(0).shoot("default");
+            } catch (IOException e) {}
+        }
+        if(ke.getKeyCode() == KeyEvent.VK_SPACE){
+            try {
+                playerRect.shoot("burst");
+            } catch (IOException e) {}
         }
 
     }
@@ -223,7 +228,7 @@ public class MyGame extends Game {
                     enemyList.get(0).setTarget(false);
                 }
             }catch (Exception e){
-                System.out.println("Error Mouse 3 "+e);
+                System.out.println("lol");
             }
         }
         else if(me.getButton() == MouseEvent.BUTTON3){

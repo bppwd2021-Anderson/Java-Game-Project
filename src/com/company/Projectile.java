@@ -6,54 +6,46 @@ import java.io.File;
 import java.io.IOException;
 
 public class Projectile implements Entity{
-     private int _width;
-     private int _height;
-
-     //    Top Left
+     private int width,height;
      private Entity parent;
-     private int _x;
-     private int _y;
-     private int velX = 20;
-     private int velY = 20;
-     private Enemy target;
-     private String _direction;
+     private int x,y;
+     private int velX, velY;
+     protected int distTraveled;
 //     private String playerImg = "D:/Anderson/Junior Year/Java/w7/shot.png";
 //     private BufferedImage readImg =  ImageIO.read(new File(playerImg));
 
-     public Projectile(int x, int y, int width, int height, String direction) throws IOException {
-         _width = width;
-         _height = height;
-         _x = x;
-         _y = y;
-         _direction = direction;
+     public Projectile(int x, int y, int width, int height,int xVel, int yVel, Entity parent) {
+         this.width = width;
+         this.height = height;
+         this.x = x;
+         this.y = y;
+         this.velX = xVel;
+         this.velY = yVel;
+         this.parent = parent;
      }
      public void setParent(Entity parent){
          this.parent = parent;
-         if(parent instanceof Player)
-             target = ((Player) parent).getTarget();
-     }
-
-     public boolean contains(int x, int y) {
-         return (x >= _x) && (x <= _x + _width) && (y >= _y) && (y <= _y + _height);
      }
 
      public void move() {
-         if(_direction.equals("left")){
-             _x+=velX;
-         }
-         else if(_direction.equals("right")){
-             _x-=velX;
-         }
-         else if(_direction.equals("up")){
-             _y-=velY;
-         }
-         else if(_direction.equals("down")){
-             _y+=velY;
-         }
-         else if(parent instanceof Player && _direction.equals("target")){
-             _x -= (parent.get_x()-target.get_x())/30;
-             _y -= (parent.get_y()-target.get_y())/30;
-         }
+         x+=velX;
+         y+=velY;
+//         if(mode.equals("left")){
+//             x+=velX;
+//         }
+//         else if(mode.equals("right")){
+//             x-=velX;
+//         }
+//         else if(mode.equals("up")){
+//             y-=velY;
+//         }
+//         else if(mode.equals("down")){
+//             y+=velY;
+//         }
+//         else if(parent instanceof Player && mode.equals("target")){
+//             x -= (parent.get_x()-target.get_x())/30;
+//             y -= (parent.get_y()-target.get_y())/30;
+//         }
      }
 //     public void target(Enemy target){
 //         this.target = target;
@@ -63,43 +55,29 @@ public class Projectile implements Entity{
 //     }
      public void draw(Graphics pen, Color color){
          pen.setColor(color);
-         pen.fillRect(_x,_y,_width,_height);
-//         pen.drawImage(readImg,_x,_y,_width,_height+3,null);
+         pen.fillRect(x,y,width,height);
+         distTraveled++;
+         if(this instanceof Burst && distTraveled > 25){
+             System.out.println(distTraveled);
+             ((Burst) this).burst();
+         }
+//         pen.drawImage(readImg,x,y,width,height+3,null);
 
      }
-
      @Override
      public String toString() {
-         return "Projectile[x=" + _x + ",y=" + _y + ",width=" + _width + ",height=" + _height + "]";
+         return "Projectile[x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + "]";
      }
-
-     public void set_direction(String _direction) {
-         this._direction = _direction;
-     }
-
-     public String get_direction() {
-         return _direction;
-     }
-
      public int get_height() {
-         return _height;
+         return height;
      }
-
      public int get_width() {
-         return _width;
+         return width;
      }
-
      public int get_x() {
-         return _x;
+         return x;
      }
-
-    @Override
-    public boolean intersects(Entity bullet) {
-        return false;
-    }
-
-
     public int get_y() {
-         return _y;
+         return y;
      }
  }
