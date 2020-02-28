@@ -23,7 +23,7 @@ public class Burst extends Projectile {
     public void burst(int currentX, int currentY) throws IOException {
         if(parent != null && parent instanceof Shootable){
             //Up
-            ((Shootable) parent).createBullet(new Standard(this.x , this.y - distTraveled, 1000, 10,0,-20,this));
+            ((Shootable) parent).createBullet(new Standard(this.x , this.y - distTraveled, 10, 10,0,-20,this));
             //Down
 //            ((Shootable) parent).createBullet(new Standard(this.x , this.y - distTraveled , 10, 10,0,20,this));
             //Left
