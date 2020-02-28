@@ -23,21 +23,21 @@ public class Burst extends Projectile {
     public void burst(int currentX, int currentY) throws IOException {
         if(parent != null && parent instanceof Shootable){
             //Up
-            ((Shootable) parent).createBullet(new Standard(this.x , this.y, 10, 10,0,-20,this));
+            ((Shootable) parent).createBullet(new Standard(this.x , this.y - distTraveled, 1000, 10,0,-20,this));
             //Down
-            ((Shootable) parent).createBullet(new Standard(this.x , this.y , 10, 10,0,20,this));
+//            ((Shootable) parent).createBullet(new Standard(this.x , this.y - distTraveled , 10, 10,0,20,this));
             //Left
-            ((Shootable) parent).createBullet(new Standard(this.x , this.y , 10, 10,-20,0,this));
+            ((Shootable) parent).createBullet(new Standard(this.x , this.y - distTraveled , 10, 10,-20,0,this));
             //Right
-            ((Shootable) parent).createBullet(new Standard(this.x , this.y , 10, 10,20,0,this));
+            ((Shootable) parent).createBullet(new Standard(this.x , this.y - distTraveled , 10, 10,20,0,this));
             //upLeft
-            ((Shootable) parent).createBullet(new Standard(this.x , this.y , 10, 10,-20,-20,this));
+            ((Shootable) parent).createBullet(new Standard(this.x , this.y - distTraveled , 10, 10,-20,-20,this));
             //upRight
-            ((Shootable) parent).createBullet(new Standard(this.x , this.y , 10, 10,20,-20,this));
+            ((Shootable) parent).createBullet(new Standard(this.x , this.y - distTraveled , 10, 10,20,-20,this));
             //downLeft
-            ((Shootable) parent).createBullet(new Standard(this.x , this.y , 10, 10,-20,20,this));
+            ((Shootable) parent).createBullet(new Standard(this.x , this.y - distTraveled , 10, 10,-20,20,this));
             //downRight
-            ((Shootable) parent).createBullet(new Standard(this.x , this.y , 10, 10,20,20,this));
+            ((Shootable) parent).createBullet(new Standard(this.x , this.y - distTraveled , 10, 10,20,20,this));
             if(burstTimes<=2) {
                 hasBurst = true;
             }
@@ -55,19 +55,19 @@ public class Burst extends Projectile {
 /*
             //This can be the mechanic for when the player gets hurt && has more than 1 health
             //Up
-            ((Shootable) parent).createBullet(new Projectile(this.x , this.y , 10, 10,0,-20,this));
+            ((Shootable) parent).createBullet(new Projectile(this.x , this.y - distTraveled , 10, 10,0,-20,this));
             //Down
-            ((Shootable) parent).createBullet(new Projectile(this.x , this.y , 10, 10,0,20,this));
+            ((Shootable) parent).createBullet(new Projectile(this.x , this.y - distTraveled , 10, 10,0,20,this));
             //Left
-            ((Shootable) parent).createBullet(new Projectile(this.x , this.y , 10, 10,-20,0,this));
+            ((Shootable) parent).createBullet(new Projectile(this.x , this.y - distTraveled , 10, 10,-20,0,this));
             //Right
-            ((Shootable) parent).createBullet(new Projectile(this.x , this.y , 10, 10,20,0,this));
+            ((Shootable) parent).createBullet(new Projectile(this.x , this.y - distTraveled , 10, 10,20,0,this));
             //upLeft
-            ((Shootable) parent).createBullet(new Projectile(this.x , this.y , 10, 10,-20,-20,this));
+            ((Shootable) parent).createBullet(new Projectile(this.x , this.y - distTraveled , 10, 10,-20,-20,this));
             //upRight
-            ((Shootable) parent).createBullet(new Projectile(this.x , this.y , 10, 10,20,-20,this));
+            ((Shootable) parent).createBullet(new Projectile(this.x , this.y - distTraveled , 10, 10,20,-20,this));
             //downLeft
-            ((Shootable) parent).createBullet(new Projectile(this.x , this.y , 10, 10,-20,20,this));
+            ((Shootable) parent).createBullet(new Projectile(this.x , this.y - distTraveled , 10, 10,-20,20,this));
             //downRight
-            ((Shootable) parent).createBullet(new Projectile(this.x , this.y , 10, 10,20,20,this));
+            ((Shootable) parent).createBullet(new Projectile(this.x , this.y - distTraveled , 10, 10,20,20,this));
             */

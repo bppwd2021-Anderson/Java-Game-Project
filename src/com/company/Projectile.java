@@ -57,7 +57,7 @@ public class Projectile implements Entity{
          pen.setColor(color);
          pen.fillRect(x,y,width,height);
          distTraveled+=Math.abs(velY);
-         if(this instanceof Burst && distTraveled > 250 && !(((Burst) this).hasBurst)){
+         if(this instanceof Burst && distTraveled > 300 && !(((Burst) this).hasBurst)){
              System.out.println(this.x+" "+this.y);
              ((Burst) this).burst(this.x,this.y);
          }
