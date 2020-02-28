@@ -27,7 +27,7 @@ public class MyGame extends Game {
     private Player playerRect = new Player(pX,pY,10,10);
     private int count = 0,secondsLived = 0/*,shootTime = 0*/;
     private boolean moveUp,moveDown,moveLeft,moveRight;
-    private BufferedImage readImg = ImageIO.read(new File("/D://Anderson/Junior Year/Java/w7/maxresdefault.jpg/"));
+    private BufferedImage readImg = ImageIO.read(new File("img/maxresdefault.jpg/"));
     private boolean targetSet,rightClickPressed;
     private boolean shoot;
     public MyGame() throws IOException {

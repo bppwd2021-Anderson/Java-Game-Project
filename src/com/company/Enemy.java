@@ -117,7 +117,7 @@ public class Enemy implements Entity,Shootable {
     }
 //    _x+(int)(Math.random()*100+1) >= 1149
 //    _y+randomY >= 749
-    public void draw(Graphics pen, int listCounter, ArrayList<Enemy> enemyList){
+    public void draw(Graphics pen, int listCounter, ArrayList<Enemy> enemyList) throws IOException {
         pen.fillRect(enemyList.get(listCounter).get_x(), enemyList.get(listCounter).get_y(), enemyList.get(listCounter).get_width(), enemyList.get(listCounter).get_height());
         pen.setColor(Color.RED);
         if(isTarget){

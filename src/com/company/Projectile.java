@@ -53,13 +53,13 @@ public class Projectile implements Entity{
 //     public void target(Player target){
 //
 //     }
-     public void draw(Graphics pen, Color color){
+     public void draw(Graphics pen, Color color) throws IOException {
          pen.setColor(color);
          pen.fillRect(x,y,width,height);
-         distTraveled++;
-         if(this instanceof Burst && distTraveled > 25){
-             System.out.println(distTraveled);
-             ((Burst) this).burst();
+         distTraveled+=Math.abs(velY);
+         if(this instanceof Burst && distTraveled > 250 && !(((Burst) this).hasBurst)){
+             System.out.println(this.x+" "+this.y);
+             ((Burst) this).burst(this.x,this.y);
          }
 //         pen.drawImage(readImg,x,y,width,height+3,null);
 

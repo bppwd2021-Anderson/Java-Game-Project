@@ -21,7 +21,7 @@ public class Player implements Entity,Shootable {
     private boolean dead;
     private int health;
     private Enemy target;
-    private String playerImg = "D:/Anderson/Junior Year/Java/w7/boat.png";
+    private String playerImg = "img/boat.png";
     private BufferedImage readImg =  ImageIO.read(new File(playerImg));
     public Player(int x, int y, int width, int height) throws IOException {
         _width = width;
@@ -51,8 +51,6 @@ public class Player implements Entity,Shootable {
         }
         return false;
     }
-
-    @Override
     public void createBullet(Projectile projectile) {
         kevin.add(projectile);
     }
