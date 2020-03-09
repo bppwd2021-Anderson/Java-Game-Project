@@ -14,7 +14,7 @@ public class Enemy implements Entity,Shootable {
     private boolean left = (Math.random() * 2 + 1 % 2 == 0),right = (Math.random() * 2 + 1 % 2 == 0),up = (Math.random() * 2 + 1 % 2 == 0),down = (Math.random() * 2 + 1 % 2 == 0);
     private boolean isTarget;
     private ArrayList<Projectile> kevin = new ArrayList<>();
-    private int health = 5;
+    private int health = 100;
     private boolean slowDown = false;
 
     public Enemy(int x, int y, int width, int height) {

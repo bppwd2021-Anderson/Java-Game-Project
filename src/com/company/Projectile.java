@@ -58,7 +58,6 @@ public abstract class Projectile implements Entity{
          pen.fillRect(x,y,width,height);
          distTraveled+=Math.abs(velY);
          if(this instanceof Burst && distTraveled > 300 && !(((Burst) this).hasBurst)){
-             System.out.println(this.x+" "+this.y);
              ((Burst) this).burst(this.x,this.y);
          }
 //         pen.drawImage(readImg,x,y,width,height+3,null);

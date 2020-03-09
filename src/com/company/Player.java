@@ -25,7 +25,7 @@ public class Player implements Entity,Shootable {
     private BufferedImage readImg =  ImageIO.read(new File(playerImg));
     private int score = 0;
     private int charge = 0;
-    private int slowDownLeft = 100;
+    private int slowDownLeft = 0;
     public Player(int x, int y, int width, int height) throws IOException {
         _width = width;
         _height = height;
