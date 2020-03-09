@@ -10,7 +10,8 @@ import java.awt.event.MouseEvent;
 
 import static java.lang.StrictMath.E;
 
-/* TODO: 2/25/20: Allow enemies to shoot; Create enemy waves
+/* TODO: 2/25/20:
+*   Allow enemies to shoot; Create enemy waves
 *   Go to Khan Academy
 * */
 
@@ -139,6 +140,7 @@ public class MyGame extends Game {
 //                System.out.println("x "+SCREEN_WIDTH/4+"  x+width "+(SCREEN_WIDTH/4+SCREEN_WIDTH/2));
                 pen.setColor(Color.WHITE);
                 playerRect.draw(pen);
+                pen.setColor(Color.BLACK);
                 pen.drawRect(200,200,50,200);
                 pen.setColor(Color.GREEN);
                 pen.fillRect(200,400,50,-(playerRect.getSlowDownLeft()*2));
