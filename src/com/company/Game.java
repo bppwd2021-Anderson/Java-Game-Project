@@ -22,7 +22,11 @@ public abstract class Game implements KeyListener, MouseListener {
         frame.getContentPane().add(BorderLayout.CENTER, gamePanel);
         frame.setResizable(false);
         frame.setSize(width, height);
-        frame.setLocation(350,0);
+        //-1920 puts it on the second monitor
+        //0 puts it on main monitor
+        frame.setLocation(-1920,0);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
         frame.setVisible(true);
         frame.addKeyListener(this);
         frame.addMouseListener(this);

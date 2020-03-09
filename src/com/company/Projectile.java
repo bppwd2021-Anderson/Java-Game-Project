@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Projectile implements Entity{
+public abstract class Projectile implements Entity{
      private int width,height;
      private Entity parent;
      private int x,y;

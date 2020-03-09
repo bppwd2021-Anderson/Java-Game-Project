@@ -17,8 +17,10 @@ import static java.lang.StrictMath.E;
 public class MyGame extends Game {
 
     public static final String TITLE = "BPPWD Game";
-    public static final int SCREEN_WIDTH = 850;
-    public static final int SCREEN_HEIGHT = 1050;
+    //SCREEN_WIDTH = 850
+    //SCREEN_HEIGHT = 1050
+    public static final int SCREEN_WIDTH = 1920;
+    public static final int SCREEN_HEIGHT = 1080;
     private boolean hitCap = false,alive = true;
     private boolean start = true;
     private int pX = 240,pY = 250;
@@ -30,6 +32,9 @@ public class MyGame extends Game {
     private BufferedImage readImg = ImageIO.read(new File("img/maxresdefault.jpg/"));
     private boolean targetSet,rightClickPressed;
     private boolean shoot;
+    private int speed = 17;
+//
+
     public MyGame() throws IOException {
 //        (int)(Math.random()*1100+1),(int)(Math.random()*750+1)
         enemyList.add(new Enemy(100,100,75,75));
@@ -37,34 +42,58 @@ public class MyGame extends Game {
     public void update() throws IOException {
 //        System.out.println(rightClickPressed);
         if(!start) {
-            boolean loseHealth = false;
-//            shootTime++;
-            try {
-                for (int i = 0; i < enemyCount + 1; i++) {
-                    if (playerRect.intersects(enemyList.get(i))) {
-                        loseHealth = true;
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println("Error2: " + e);
+            //Fixing X
+            if((playerRect.get_x()>(SCREEN_WIDTH/2+SCREEN_WIDTH/4)-10)){
+                playerRect.set_x(playerRect.get_x()-playerRect.getxVel());
             }
+            if(playerRect.get_x()<(SCREEN_WIDTH/4)) {
+                while (playerRect.get_x() < (SCREEN_WIDTH / 4)){
+                    playerRect.set_x(playerRect.get_x() + playerRect.getxVel());
+                }
+            }
+            //Fixing Y
+            if(playerRect.get_y()>(SCREEN_HEIGHT-10)){
+                playerRect.set_y(playerRect.get_y()-playerRect.getxVel());
+            }
+            if(playerRect.get_y()<0){
+                playerRect.set_y(playerRect.get_y()+playerRect.getxVel());
+            }
+            //Dealing with slowdwown
+//            for (int i = 0; i < enemyCount; i++) {
+                System.out.println(enemyList.get(0).isSlow());
+                if(enemyList.get(0).isSlow()){
+                    playerRect.decrementSlowMeter();
+                }
+                if(playerRect.getSlowDownLeft()<1){
+                    if(enemyList.get(0).isSlow())
+                        enemyList.get(0).speedUp();
+                }
+//            System.out.println(playerRect.getSlowDownLeft());
+//            try {
+//                for (int i = 0; i < enemyCount + 1; i++) {
+//                    if (playerRect.intersects(enemyList.get(i))) {
+//                        loseHealth = true;
+//                    }
+//                }
+//            } catch (Exception e) {
+//                System.out.println("Error2: " + e);
+//            }
             if(shoot) {
                 try {
                         playerRect.shoot("default");
+//                        Thread.sleep(10);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            else if (rightClickPressed&&targetSet)
+//            else if (rightClickPressed&&targetSet)
 //                playerRect.shoot("target");
-            if (loseHealth && count % 15 == 0) {
-                playerRect.healthLoss();
-            }
                 if (enemyList.size() > 0) {
                     for (int x = 0; x < enemyCount + 1; x++) {
                         for (int y = 0; y < playerRect.getKevin().size(); y++) {
                             if (enemyList.size()!=0 && enemyList.get(x).intersects(playerRect.getKevin().get(y))){
+                                playerRect.incrementScore();
                                 playerRect.getKevin().remove(y);
                                 enemyCount--;
                                 if(enemyList.get(x).isTarget()){
@@ -90,12 +119,10 @@ public class MyGame extends Game {
             }
 //            }
                 count++;
-                if (alive && count % 60 == 0) {
-                    secondsLived++;
-                }
             }
     }
     public void draw(Graphics pen) throws IOException {
+//        pen.setFont(new Font("ZapfDingbats", Font.PLAIN, 20));
             if(start){
                 pen.setColor(Color.WHITE);
                 pen.fillRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
@@ -106,9 +133,15 @@ public class MyGame extends Game {
                 pen.drawString("press [F] to start",350,525);
             }
             else {
-                pen.drawImage(readImg, 0, 0, 850, 1025, null);
+//                pen.drawImage(readImg, SCREEN_WIDTH/4, 0, SCREEN_WIDTH/2, 1080, null);
+                pen.setColor(Color.BLACK);
+                pen.fillRect(SCREEN_WIDTH/4, 0, SCREEN_WIDTH/2, 1080);
+//                System.out.println("x "+SCREEN_WIDTH/4+"  x+width "+(SCREEN_WIDTH/4+SCREEN_WIDTH/2));
                 pen.setColor(Color.WHITE);
                 playerRect.draw(pen);
+                pen.drawRect(200,200,50,200);
+                pen.setColor(Color.GREEN);
+                pen.fillRect(200,400,50,-(playerRect.getSlowDownLeft()*2));
                 pen.setColor(Color.RED);
                 try {
                     for (int listCounter = 0; listCounter < enemyCount + 1; listCounter++) {
@@ -130,18 +163,16 @@ public class MyGame extends Game {
                 if (moveRight) {
                     playerRect.move("right");
                 }
-                if (playerRect.get_health() > 0) {
+                if (playerRect.get_lives() > 0) {
                     pen.setColor(Color.black);
-                    pen.setFont(new Font("ZapfDingbats", Font.PLAIN, 20));
                 } else {
                     alive = false;
                     pen.setColor(Color.black);
-                    pen.setFont(new Font("ZapfDingbats", Font.PLAIN, 20));
                     pen.drawString("Hit Enter to restart", 100, 100);
-                    pen.drawString("You lived " + secondsLived + " seconds", 100, SCREEN_WIDTH / 2);
                     playerRect = new Player(0, 0, 0, 0);
                     playerRect.kill();
                 }
+                pen.drawString(playerRect.getSlowDownLeft()+"",200,200);
             }
 
     }
@@ -150,7 +181,6 @@ public class MyGame extends Game {
 
     @Override
     public void keyPressed(KeyEvent ke) {
-//        if(ke.getKeyCode() == KeyEvent.VK_9){ }
         if (ke.getKeyCode() == 10) {
             if(playerRect.isDead()) {
                 alive = true;
@@ -163,6 +193,7 @@ public class MyGame extends Game {
                 playerRect.restart();
             }
         }
+        //Movement Keys
         if (ke.getKeyCode() == 87) {
             moveUp = true;
         }
@@ -175,21 +206,41 @@ public class MyGame extends Game {
         if (ke.getKeyCode() == 83) {
             moveDown = true;
         }
-        if(ke.getKeyCode() == KeyEvent.VK_E){
-            enemyList.add(new Enemy((int)(Math.random()*1100+1),(int)(Math.random()*750+1),75,75));
-        }
+
+
+//        if(ke.getKeyCode() == KeyEvent.VK_E){
+//            enemyList.add(new Enemy((int)(Math.random()*1100+1),(int)(Math.random()*750+1),75,75));
+//        }
+
+        //Start Game
         if(ke.getKeyCode() == KeyEvent.VK_F){
             start = false;
         }
+        //Testing enemy shooting
         if(ke.getKeyCode() == KeyEvent.VK_Q){
             try {
                 enemyList.get(0).shoot("default");
             } catch (IOException e) {}
         }
+        //Player burst shot
         if(ke.getKeyCode() == KeyEvent.VK_SPACE){
             try {
                 playerRect.shoot("burst");
             } catch (IOException e) {}
+        }
+        //Quit Game
+        if(ke.getKeyCode() == KeyEvent.VK_ESCAPE){
+            System.exit(0);
+        }
+        //Kill player test
+        if(ke.getKeyCode() == KeyEvent.VK_X){
+            playerRect.kill();
+        }
+        if(ke.getKeyCode() == KeyEvent.VK_DOWN){
+            enemyList.get(0).slowDown();
+        }
+        if(ke.getKeyCode() == KeyEvent.VK_UP){
+            enemyList.get(0).speedUp();
         }
 
     }

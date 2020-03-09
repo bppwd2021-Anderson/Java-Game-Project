@@ -14,6 +14,8 @@ public class Enemy implements Entity,Shootable {
     private boolean left = (Math.random() * 2 + 1 % 2 == 0),right = (Math.random() * 2 + 1 % 2 == 0),up = (Math.random() * 2 + 1 % 2 == 0),down = (Math.random() * 2 + 1 % 2 == 0);
     private boolean isTarget;
     private ArrayList<Projectile> kevin = new ArrayList<>();
+    private int health = 5;
+    private boolean slowDown = false;
 
     public Enemy(int x, int y, int width, int height) {
         _width = width;
@@ -58,19 +60,38 @@ public class Enemy implements Entity,Shootable {
 
     public void shoot(String type) throws IOException {
         Projectile newBullet;
-        switch (type) {
-            case "burst":
-                newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
-                break;
-            case "bounce":
-                newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
-                break;
-            case "Tracking":
-                newBullet = new Tracking(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
-                break;
-            default:
-                newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
-                break;
+        if(!slowDown) {
+            switch (type) {
+                case "burst":
+                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
+                    break;
+                case "bounce":
+                    newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
+                    break;
+                case "Tracking":
+                    newBullet = new Tracking(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
+                    break;
+                default:
+                    newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
+                    break;
+            }
+        }
+        else {
+            switch (type) {
+                case "burst":
+                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 5, this);
+                    break;
+                case "bounce":
+                    newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 5, this);
+                    break;
+                case "Tracking":
+                    newBullet = new Tracking(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 5, this);
+                    break;
+                default:
+                    newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 5, this);
+                    break;
+            }
+
         }
         newBullet.setParent(this);
         kevin.add(newBullet);
@@ -86,6 +107,9 @@ public class Enemy implements Entity,Shootable {
             left = true;
         }
     }
+    public void loseHealth(){
+        health--;
+    }
     public void flipDirectionY(){
         if(up){
             down = true;
@@ -95,6 +119,12 @@ public class Enemy implements Entity,Shootable {
             down = false;
             up = true;
         }
+    }
+    public void slowDown(){
+        slowDown = true;
+    }
+    public void speedUp(){
+        slowDown = false;
     }
     public void checkBoundaries(){
         if(_x+velX >= 840){
@@ -114,6 +144,10 @@ public class Enemy implements Entity,Shootable {
             down = true;
             up = true;
         }
+    }
+
+    public boolean isSlow() {
+        return slowDown;
     }
 //    _x+(int)(Math.random()*100+1) >= 1149
 //    _y+randomY >= 749

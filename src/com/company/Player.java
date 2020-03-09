@@ -19,21 +19,32 @@ public class Player implements Entity,Shootable {
     private int xVel = 5,yVel = 5;
     private ArrayList<Projectile> kevin = new ArrayList<>();
     private boolean dead;
-    private int health;
+    private int lives;
     private Enemy target;
     private String playerImg = "img/boat.png";
     private BufferedImage readImg =  ImageIO.read(new File(playerImg));
+    private int score = 0;
+    private int charge = 0;
+    private int slowDownLeft = 100;
     public Player(int x, int y, int width, int height) throws IOException {
         _width = width;
         _height = height;
         _x = x;
         _y = y;
-        health = 5;
+        lives = 5;
 
     }
 
     public boolean contains(int x, int y) {
         return (x >= _x) && (x <= _x + _width) && (y >= _y) && (y <= _y + _height);
+    }
+
+    public int getxVel() {
+        return xVel;
+    }
+
+    public void set_x(int _x) {
+        this._x = _x;
     }
 
     public boolean intersects(Entity rect) {
@@ -65,6 +76,7 @@ public class Player implements Entity,Shootable {
 
     public void move(String direction){
         if(direction.equals("up")){
+//            if(_y-yVel > )
             _y-=yVel;
         }
         if(direction.equals("down")){
@@ -77,31 +89,33 @@ public class Player implements Entity,Shootable {
             _x+=xVel;
         }
     }
-    public void healthLoss(){
-        health --;
+    public void livesLoss(){
+        lives --;
     }
     public void kill(){
         dead = true;
-        health-=5;
+        lives-=5;
     }
     public void restart(){
-        health = 5;
+        lives = 5;
         dead = false;
     }
     public void shoot(String type) throws IOException {
         Projectile newBullet;
         switch (type) {
+            case "super":
+//                barrage of bullets? some kind of charged shot
             case "burst":
-                newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -20, this);
+                newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -10, this);
                 break;
             case "bounce":
-                newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -20, this);
+                newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -10, this);
                 break;
             case "Tracking":
-                newBullet = new Tracking(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -20, this);
+                newBullet = new Tracking(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -10, this);
                 break;
             default:
-                newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -20, this);
+                newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -10, this);
                 break;
         }
         newBullet.setParent(this);
@@ -120,13 +134,32 @@ public class Player implements Entity,Shootable {
         }
     }
 
+
+    public void incrementScore(){
+        score+=20;
+    }
+    public void decrementSlowMeter(){
+        slowDownLeft--;
+    }
+    public void incrementSlowMeter(){
+        slowDownLeft++;
+    }
+
+    public int getSlowDownLeft() {
+        return slowDownLeft;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
     @Override
     public String toString() {
         return "Player[x="+_x+",y="+_y+",width="+_width+",height="+_height+"]";
     }
 
-    public int get_health() {
-        return health;
+    public int get_lives() {
+        return lives;
     }
 
     public boolean isDead(){
@@ -154,5 +187,9 @@ public class Player implements Entity,Shootable {
 
     public int get_y() {
         return _y;
+    }
+
+    public void set_y(int i) {
+        _y = i;
     }
 }
