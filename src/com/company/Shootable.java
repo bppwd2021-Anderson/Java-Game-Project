@@ -8,4 +8,6 @@ public interface Shootable {
     void shoot(String type) throws IOException;
 
     void createBullet(Projectile projectile);
+
+    void removeBullet(Projectile projectile);
 }

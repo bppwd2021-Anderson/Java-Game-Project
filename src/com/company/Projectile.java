@@ -11,6 +11,7 @@ public abstract class Projectile implements Entity{
      private int x,y;
      private int velX, velY;
      protected int distTraveled;
+     private int damage = 1;
 //     private String playerImg = "D:/Anderson/Junior Year/Java/w7/shot.png";
 //     private BufferedImage readImg =  ImageIO.read(new File(playerImg));
 
@@ -26,7 +27,10 @@ public abstract class Projectile implements Entity{
      public void setParent(Entity parent){
          this.parent = parent;
      }
-
+     public void update(int SCREEN_WIDTH, int SCREEN_HEIGHT){
+         exitScreen(SCREEN_WIDTH,SCREEN_HEIGHT);
+         move();
+     }
      public void move() {
          x+=velX;
          y+=velY;
@@ -47,9 +51,7 @@ public abstract class Projectile implements Entity{
 //             y -= (parent.get_y()-target.get_y())/30;
 //         }
      }
-//     public void target(Enemy target){
-//         this.target = target;
-//     }
+
 //     public void target(Player target){
 //
 //     }
@@ -61,8 +63,11 @@ public abstract class Projectile implements Entity{
              ((Burst) this).burst(this.x,this.y);
          }
 //         pen.drawImage(readImg,x,y,width,height+3,null);
-
      }
+     public int giveDamage(){
+         return damage;
+     }
+     public abstract void exitScreen(int SCREEN_WIDTH, int SCREEN_HEIGHT);
      @Override
      public String toString() {
          return "Projectile[x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + "]";

@@ -22,18 +22,19 @@ public class MyGame extends Game {
     //SCREEN_HEIGHT = 1050
     public static final int SCREEN_WIDTH = 1920;
     public static final int SCREEN_HEIGHT = 1080;
+
     private boolean alive = true; // Is player alive (I think?)
     private boolean start = true; // For the start screen
-    private int pX = 240,pY = 250; // Player start position, probably don't need this
-    private int enemyCount = 0; // The current way of counting num of enemies
+    private int pX = 1000,pY = 800; // Player start position, probably don't need this
     private ArrayList<Enemy> enemyList = new ArrayList<>();
     private Player playerRect = new Player(pX,pY,10,10);
-    private int count = 0; // Like a framerate counter, used for cooldowns and efficiency
+    private int count = 0; // Akin to a framerate counter, used for cooldowns and efficiency
     private boolean moveUp,moveDown,moveLeft,moveRight; // Booleans for movement to make it smoother and nicer
     private BufferedImage readImg = ImageIO.read(new File("img/maxresdefault.jpg/"));
     private boolean targetSet,rightClickPressed; // Used for target bullets
     private boolean shoot; // Boolean to make shooting on mouse hold rather than 1 per mouse click
     private int speed = 17; // Speed used in the thread.sleep in Game.java, can be used later to edit speed if something comes to mind
+    private boolean allEnemiesDead = false; // Pretty self explanatory
 //
 
     public MyGame() throws IOException {
@@ -43,44 +44,36 @@ public class MyGame extends Game {
     public void update() throws IOException {
 //        System.out.println(rightClickPressed);
         if(!start) {
-            //Checking x boundaries for players
-            if((playerRect.get_x()>(SCREEN_WIDTH/2+SCREEN_WIDTH/4)-10)){
-                playerRect.set_x(playerRect.get_x()-playerRect.getxVel());
+            // Checks if all enemies are dead or not
+
+            playerRect.update(SCREEN_WIDTH,SCREEN_HEIGHT);
+            if(enemyList.size()>0)
+                enemyList.get(0).update(playerRect,enemyList);
+            if(enemyList.size() == 0){
+                allEnemiesDead = true;
             }
-            if(playerRect.get_x()<(SCREEN_WIDTH/4)) {
-                while (playerRect.get_x() < (SCREEN_WIDTH / 4)){
-                    playerRect.set_x(playerRect.get_x() + playerRect.getxVel());
-                }
-            }
-            //Checking y boundaries for players
-            if(playerRect.get_y()>(SCREEN_HEIGHT-10)){
-                playerRect.set_y(playerRect.get_y()-playerRect.getxVel());
-            }
-            if(playerRect.get_y()<0){
-                playerRect.set_y(playerRect.get_y()+playerRect.getxVel());
-            }
-            //Dealing with slowdwown effect for the player
+            // Dealing with slowdwown effect for the player
 //            for (int i = 0; i < enemyCount; i++) {
-                if(enemyList.get(0).isSlow()){
+            if(!allEnemiesDead) {
+                if (enemyList.get(0).isSlow()) {
                     playerRect.decrementSlowMeter();
-                }
-                else if(count%10==0 && playerRect.getSlowDownLeft()<100){
+                } else if (count % 10 == 0 && playerRect.getSlowDownLeft() < 100) {
                     playerRect.incrementSlowMeter();
                 }
-                if(playerRect.getSlowDownLeft()<1){
-                    if(enemyList.get(0).isSlow())
+                if (playerRect.getSlowDownLeft() < 1) {
+                    if (enemyList.get(0).isSlow())
                         enemyList.get(0).speedUp();
                 }
-//            System.out.println(playerRect.getSlowDownLeft());
-//            try {
-//                for (int i = 0; i < enemyCount + 1; i++) {
-//                    if (playerRect.intersects(enemyList.get(i))) {
-//                        loseHealth = true;
-//                    }
-//                }
-//            } catch (Exception e) {
-//                System.out.println("Error2: " + e);
-//            }
+            }
+            try {
+                for (int i = 0; i < enemyList.size(); i++) {
+                    if (playerRect.intersects(enemyList.get(i))) {
+                        playerRect.kill();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Error2: " + e);
+            }
             if(shoot && count%5==0) { // Shooting on boolean for better shooting plus cooldown of 5-ish frames per shot
                 try {
                         playerRect.shoot("default");
@@ -91,39 +84,37 @@ public class MyGame extends Game {
 //            else if (rightClickPressed&&targetSet)
 //                playerRect.shoot("target");
             // Checking over every enemy and dealing damage/killing enemies. This should be removed and redone because this is a real bad system
-                if (enemyList.size() > 0) {
-                    for (int x = 0; x < enemyCount + 1; x++) {
+                if (!allEnemiesDead) {
+                    for (int x = 0; x < enemyList.size(); x++) {
                         for (int y = 0; y < playerRect.getKevin().size(); y++) {
-                            if (enemyList.size()!=0 && enemyList.get(x).intersects(playerRect.getKevin().get(y))){
+                            if (enemyList.size() != 0 && enemyList.get(x).intersects(playerRect.getKevin().get(y))) {
                                 playerRect.incrementScore();
                                 playerRect.getKevin().remove(y);
-                                enemyCount--;
-                                if(enemyList.get(x).isTarget()){
+                                if (enemyList.get(x).isTarget()) {
                                     targetSet = false;
                                 }
                                 enemyList.remove(x);
-                            }
-                            else if (playerRect.getKevin().get(y).get_y() < 0) {
+                            } else if (playerRect.getKevin().get(y).get_y() < 0) {
                                 playerRect.getKevin().remove(y);
                             }
                         }
                     }
-                }
-            for (int x = 0; x < enemyCount + 1; x++) {
-                for (int y = 0; y < enemyList.get(x).getKevin().size(); y++) {
-                    // Checking if player dies
-                    if (playerRect.intersects(enemyList.get(x).getKevin().get(y))) {
-                        playerRect.kill();
-                    }// Checking if enemy bullet goes past bottom boundary
-                    else if(enemyList.get(x).getKevin().get(y).get_y()>SCREEN_HEIGHT && enemyList.get(x).getKevin().size() != 0){
-                        enemyList.get(x).getKevin().remove(enemyList.get(x).getKevin().get(y));
+                    for (int x = 0; x < enemyList.size(); x++) {
+                        for (int y = 0; y < enemyList.get(x).getKevin().size(); y++) {
+                            // Checking if player dies
+                            if (playerRect.intersects(enemyList.get(x).getKevin().get(y))) {
+                                playerRect.kill();
+                            }// Checking if enemy bullet goes past bottom boundary
+                            else if (enemyList.get(x).getKevin().get(y).get_y() > SCREEN_HEIGHT && enemyList.get(x).getKevin().size() != 0) {
+                                enemyList.get(x).getKevin().remove(enemyList.get(x).getKevin().get(y));
+                            }
+                        }
                     }
                 }
-            }
 //            }
             // Increments frame
                 count++;
-            }
+        }
     }
     public void draw(Graphics pen) throws IOException {
 //        pen.setFont(new Font("ZapfDingbats", Font.PLAIN, 20));
@@ -143,13 +134,9 @@ public class MyGame extends Game {
 //                System.out.println("x "+SCREEN_WIDTH/4+"  x+width "+(SCREEN_WIDTH/4+SCREEN_WIDTH/2));
                 pen.setColor(Color.WHITE);
                 playerRect.draw(pen); // Draw player
-                pen.setColor(Color.BLACK); // Draw outline for slowdown bar
-                pen.drawRect(200,200,50,200);
-                pen.setColor(Color.GREEN);
-                pen.fillRect(200,400,50,-(playerRect.getSlowDownLeft()*2)); // Drawing slowdown bar
                 pen.setColor(Color.RED);
                 try {
-                    for (int listCounter = 0; listCounter < enemyCount + 1; listCounter++) {
+                    for (int listCounter = 0; listCounter < enemyList.size(); listCounter++) {
                         enemyList.get(listCounter).draw(pen, listCounter, enemyList); // Draw enemies in arraylist FIX
 //                        enemyList.get(listCounter).move();
                     }
@@ -176,7 +163,7 @@ public class MyGame extends Game {
                     alive = false;
                     pen.setColor(Color.black);
                     pen.drawString("Hit Enter to restart", 100, 100);
-                    playerRect = new Player(0, 0, 0, 0);
+//                    playerRect = new Player(0, 0, 0, 0);
                     playerRect.kill();
                 }
                 pen.drawString(playerRect.getSlowDownLeft()+"",200,200); // Draw the number above slowdown bar
@@ -311,7 +298,4 @@ public class MyGame extends Game {
     }
     //Launches the Game
     public static void main(String[] args)throws IOException { new MyGame().start(TITLE, SCREEN_WIDTH,SCREEN_HEIGHT); }
-
-
-
 }

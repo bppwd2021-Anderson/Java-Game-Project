@@ -14,7 +14,7 @@ public class Enemy implements Entity,Shootable {
     private boolean left = (Math.random() * 2 + 1 % 2 == 0),right = (Math.random() * 2 + 1 % 2 == 0),up = (Math.random() * 2 + 1 % 2 == 0),down = (Math.random() * 2 + 1 % 2 == 0);
     private boolean isTarget;
     private ArrayList<Projectile> kevin = new ArrayList<>();
-    private int health = 100;
+    private int health = 10;
     private boolean slowDown = false;
 
     public Enemy(int x, int y, int width, int height) {
@@ -30,12 +30,33 @@ public class Enemy implements Entity,Shootable {
         _x = 0;
         _y = 0;
     }
+    public void update(Player playerRect, ArrayList<Enemy> enemies){
+        isHit(playerRect);
+        if(health<=0){
+            die(enemies);
+        }
+    }
     public void move(){
         checkBoundaries();
         if(right)_x += velX;
         else _x-= velX;
         if(down)_y += velY;
         else _y-= velY;
+    }
+    public void isHit(Player playerRect){
+        for (int y = 0; y < playerRect.getKevin().size(); y++) {
+            if (this.intersects(playerRect.getKevin().get(y))) {
+                health-=1;
+                playerRect.getKevin().remove(y);
+                System.out.println("Hello");
+                if (this.isTarget()) {
+                    isTarget = false;
+                }
+            }
+        }
+    }
+    public void die(ArrayList<Enemy> enemies){
+        enemies.remove(this);
     }
     public boolean intersects(Entity rect) {
         if((_y)<=(rect.get_y()+rect.get_height()) && (rect.get_y()+rect.get_height()<=_y+_height) && ((rect.get_x()+rect.get_width())>_x) && (rect.get_x()<(_x+_width))){
@@ -144,6 +165,10 @@ public class Enemy implements Entity,Shootable {
             down = true;
             up = true;
         }
+    }
+    @Override
+    public void removeBullet(Projectile projectile) {
+        kevin.remove(projectile);
     }
 
     public boolean isSlow() {

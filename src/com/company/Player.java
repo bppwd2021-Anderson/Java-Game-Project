@@ -1,7 +1,6 @@
 package com.company;
 /*TODO
-*  Take projectiles from MyGame and bring them in here
-*  idk finish it
+*  Move drawing HUD elements that pertain to the player inside the player
 * */
 
 import org.w3c.dom.css.Rect;
@@ -26,6 +25,7 @@ public class Player implements Entity,Shootable {
     private int score = 0;
     private int charge = 0;
     private int slowDownLeft = 0;
+    private int burstBullets = 5;
     public Player(int x, int y, int width, int height) throws IOException {
         _width = width;
         _height = height;
@@ -34,7 +34,24 @@ public class Player implements Entity,Shootable {
         lives = 5;
 
     }
-
+    public void update(int SCREEN_WIDTH, int SCREEN_HEIGHT){
+        //Checking x boundaries for players
+        if((this.get_x()>(SCREEN_WIDTH/2+SCREEN_WIDTH/4)-10)){
+            this.set_x(this.get_x()-this.getxVel());
+        }
+        if(this.get_x()<(SCREEN_WIDTH/4)) {
+            while (this.get_x() < (SCREEN_WIDTH / 4)){
+                this.set_x(this.get_x() + this.getxVel());
+            }
+        }
+        //Checking y boundaries for players
+        if(this.get_y()>(SCREEN_HEIGHT-10)){
+            this.set_y(this.get_y()-this.getxVel());
+        }
+        if(this.get_y()<0){
+            this.set_y(this.get_y()+this.getxVel());
+        }
+    }
     public boolean contains(int x, int y) {
         return (x >= _x) && (x <= _x + _width) && (y >= _y) && (y <= _y + _height);
     }
@@ -64,6 +81,11 @@ public class Player implements Entity,Shootable {
     }
     public void createBullet(Projectile projectile) {
         kevin.add(projectile);
+    }
+
+    @Override
+    public void removeBullet(Projectile projectile) {
+        kevin.remove(projectile);
     }
 
     public void setTarget(Enemy target){
@@ -105,8 +127,14 @@ public class Player implements Entity,Shootable {
         switch (type) {
             case "super":
 //                barrage of bullets? some kind of charged shot
+                System.out.println("pow");
             case "burst":
-                newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -10, this);
+                if(burstBullets > 0){
+                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 15, 15, 0, -10, this);
+                    burstBullets--;
+                }
+                else
+                    newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -10, this);
                 break;
             case "bounce":
                 newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -10, this);
@@ -127,10 +155,23 @@ public class Player implements Entity,Shootable {
         pen.fillRect(_x,_y,_width,_height);
         pen.setColor(Color.black);
         pen.drawRect(_x,_y,_width,_height);
-        pen.drawRect(_x+1,_y+1,_width-2,_height-2);
+        pen.drawRect(_x+1,_y+1,_width-2,_height-2); // Player's outline
+
+        // Drawing slowdown bar
+        pen.setColor(Color.BLACK); // Draw outline for slowdown bar
+        pen.drawRect(200,200,50,200);
+        pen.setColor(Color.GREEN);
+        pen.fillRect(201,400,49,-(this.getSlowDownLeft()*2)); // Drawing slowdown bar
+
+        // Drawing bullets
         for (int i = 0; i < kevin.size(); i++) {
             kevin.get(i).move();
-            kevin.get(i).draw(pen,Color.yellow);
+            if(kevin.get(i) instanceof Burst) {
+                kevin.get(i).draw(pen, Color.GREEN);
+            }
+            else if(kevin.get(i) instanceof Standard){
+                kevin.get(i).draw(pen, Color.YELLOW);
+            }
         }
     }
 
