@@ -34,6 +34,7 @@ public class Enemy implements Entity,Shootable {
         isHit(playerRect);
         if(health<=0){
             die(enemies);
+            playerRect.incrementScore(100);
         }
     }
     public void move(){
@@ -48,7 +49,6 @@ public class Enemy implements Entity,Shootable {
             if (this.intersects(playerRect.getKevin().get(y))) {
                 health-=1;
                 playerRect.getKevin().remove(y);
-                System.out.println("Hello");
                 if (this.isTarget()) {
                     isTarget = false;
                 }

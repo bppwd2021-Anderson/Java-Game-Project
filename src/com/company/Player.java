@@ -51,6 +51,9 @@ public class Player implements Entity,Shootable {
         if(this.get_y()<0){
             this.set_y(this.get_y()+this.getxVel());
         }
+        for (int i = 0; i < kevin.size(); i++) {
+            kevin.get(i).update(SCREEN_WIDTH,SCREEN_HEIGHT);
+        }
     }
     public boolean contains(int x, int y) {
         return (x >= _x) && (x <= _x + _width) && (y >= _y) && (y <= _y + _height);
@@ -130,20 +133,20 @@ public class Player implements Entity,Shootable {
                 System.out.println("pow");
             case "burst":
                 if(burstBullets > 0){
-                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 15, 15, 0, -10, this);
+                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 15, 15, 0, -5, this);
                     burstBullets--;
                 }
                 else
-                    newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -10, this);
+                    newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -5, this);
                 break;
             case "bounce":
-                newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -10, this);
+                newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -5, this);
                 break;
             case "Tracking":
-                newBullet = new Tracking(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -10, this);
+                newBullet = new Tracking(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -5, this);
                 break;
             default:
-                newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -10, this);
+                newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -5, this);
                 break;
         }
         newBullet.setParent(this);
@@ -157,11 +160,31 @@ public class Player implements Entity,Shootable {
         pen.drawRect(_x,_y,_width,_height);
         pen.drawRect(_x+1,_y+1,_width-2,_height-2); // Player's outline
 
+        pen.setColor(Color.BLACK);
+
+        // Drawing score
+        pen.drawString("Score",200,500);
+        pen.drawString(this.score+"",200,550);
+
+        // Drawing burst bullets left
+        pen.drawRect(1550,300,300,100);
+        int temp = burstBullets;
+        while (temp!=0){
+
+            temp--;
+        }
+        //        if(burstBullets>0){
+//            if(burstBullets > )
+//            drawSquare(pen,1550,250);
+//        }
+
         // Drawing slowdown bar
-        pen.setColor(Color.BLACK); // Draw outline for slowdown bar
-        pen.drawRect(200,200,50,200);
+        pen.drawRect(200,200,50,200); // Draw outline for slowdown bar
         pen.setColor(Color.GREEN);
         pen.fillRect(201,400,49,-(this.getSlowDownLeft()*2)); // Drawing slowdown bar
+
+
+
 
         // Drawing bullets
         for (int i = 0; i < kevin.size(); i++) {
@@ -176,8 +199,8 @@ public class Player implements Entity,Shootable {
     }
 
 
-    public void incrementScore(){
-        score+=20;
+    public void incrementScore(int score){
+        this.score+=score;
     }
     public void decrementSlowMeter(){
         slowDownLeft--;
@@ -192,6 +215,10 @@ public class Player implements Entity,Shootable {
 
     public int getScore() {
         return score;
+    }
+    public void drawSquare(Graphics pen,int x,int y){
+        pen.setColor(Color.YELLOW);
+        pen.drawRect(x,y,60,50);
     }
 
     @Override
@@ -216,6 +243,9 @@ public class Player implements Entity,Shootable {
 
     public ArrayList<Projectile> getKevin() {
         return kevin;
+    }
+    public int getKevinSize(){
+        return kevin.size();
     }
 
     public String getPlayerImg() {

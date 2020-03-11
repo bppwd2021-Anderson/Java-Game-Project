@@ -10,16 +10,17 @@ import java.awt.event.MouseEvent;
 
 import static java.lang.StrictMath.E;
 
-/* TODO: 2/25/20:
+/* TODO: 3/11/20:
 *   Make enemies actually die and find a better way to handle them besides an array list
 *   Go to Khan Academy
+*   Burst bullets can't currently delete their child standards if they leave the screen
 * */
 
 public class MyGame extends Game {
 
     public static final String TITLE = "BPPWD Game";
-    //SCREEN_WIDTH = 850
-    //SCREEN_HEIGHT = 1050
+    // SCREEN_WIDTH = 850
+    // SCREEN_HEIGHT = 1050
     public static final int SCREEN_WIDTH = 1920;
     public static final int SCREEN_HEIGHT = 1080;
 
@@ -85,20 +86,7 @@ public class MyGame extends Game {
 //                playerRect.shoot("target");
             // Checking over every enemy and dealing damage/killing enemies. This should be removed and redone because this is a real bad system
                 if (!allEnemiesDead) {
-                    for (int x = 0; x < enemyList.size(); x++) {
-                        for (int y = 0; y < playerRect.getKevin().size(); y++) {
-                            if (enemyList.size() != 0 && enemyList.get(x).intersects(playerRect.getKevin().get(y))) {
-                                playerRect.incrementScore();
-                                playerRect.getKevin().remove(y);
-                                if (enemyList.get(x).isTarget()) {
-                                    targetSet = false;
-                                }
-                                enemyList.remove(x);
-                            } else if (playerRect.getKevin().get(y).get_y() < 0) {
-                                playerRect.getKevin().remove(y);
-                            }
-                        }
-                    }
+                    // Replace this
                     for (int x = 0; x < enemyList.size(); x++) {
                         for (int y = 0; y < enemyList.get(x).getKevin().size(); y++) {
                             // Checking if player dies
@@ -167,6 +155,10 @@ public class MyGame extends Game {
                     playerRect.kill();
                 }
                 pen.drawString(playerRect.getSlowDownLeft()+"",200,200); // Draw the number above slowdown bar
+                if(allEnemiesDead){
+                    pen.setColor(Color.WHITE);
+                    pen.drawString("ENEMIES CLEARED",1000,300);
+                }
             }
 
     }
@@ -234,6 +226,9 @@ public class MyGame extends Game {
         }
         if(ke.getKeyCode() == KeyEvent.VK_UP){
             enemyList.get(0).speedUp();
+        }
+        if (ke.getKeyCode() == KeyEvent.VK_H){
+            System.out.println(playerRect.getKevinSize());
         }
 
     }
