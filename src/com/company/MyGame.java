@@ -44,7 +44,7 @@ public class MyGame extends Game {
     }
     public void update() throws IOException {
 //        System.out.println(rightClickPressed);
-        if(!start) {
+        if(!start && alive) {
             // Checks if all enemies are dead or not
 
             playerRect.update(SCREEN_WIDTH,SCREEN_HEIGHT);
@@ -56,7 +56,7 @@ public class MyGame extends Game {
             // Dealing with slowdwown effect for the player
 //            for (int i = 0; i < enemyCount; i++) {
             if(!allEnemiesDead) {
-                if (enemyList.get(0).isSlow()) {
+                if (enemyList.get(0).isSlow() && count % 2 == 0) {
                     playerRect.decrementSlowMeter();
                 } else if (count % 10 == 0 && playerRect.getSlowDownLeft() < 100) {
                     playerRect.incrementSlowMeter();
@@ -69,6 +69,10 @@ public class MyGame extends Game {
             try {
                 for (int i = 0; i < enemyList.size(); i++) {
                     if (playerRect.intersects(enemyList.get(i))) {
+                        playerRect.hurt();
+                        System.out.println("OUCH");
+                    }
+                    if(playerRect.get_lives() == 0){
                         playerRect.kill();
                     }
                 }
@@ -91,7 +95,11 @@ public class MyGame extends Game {
                         for (int y = 0; y < enemyList.get(x).getKevin().size(); y++) {
                             // Checking if player dies
                             if (playerRect.intersects(enemyList.get(x).getKevin().get(y))) {
-                                playerRect.kill();
+                                playerRect.hurt();
+                                System.out.println("OUCH bullet");
+                                if(playerRect.get_lives() == 0) {
+                                    playerRect.kill();
+                                }
                             }// Checking if enemy bullet goes past bottom boundary
                             else if (enemyList.get(x).getKevin().get(y).get_y() > SCREEN_HEIGHT && enemyList.get(x).getKevin().size() != 0) {
                                 enemyList.get(x).getKevin().remove(enemyList.get(x).getKevin().get(y));
@@ -109,11 +117,11 @@ public class MyGame extends Game {
             if(start){ // Displays the starting screen
                 pen.setColor(Color.WHITE);
                 pen.fillRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-                playerRect.draw(pen);
                 pen.setColor(Color.BLACK);
-                pen.drawRect(40,475,750,60);
-                pen.drawString("That white box in the middle of this ship is your core, don't let it get hurt okay? The rest of your ship is impervious to damage ",50,500);
-                pen.drawString("press [F] to start",350,525);
+//                pen.drawRect(40,475,750,60);
+                pen.drawString("Is this your first time playing?",(int)(SCREEN_WIDTH/2.75),500);
+//                pen.drawString("That white box in the middle of this ship is your core, don't let it get hurt okay? The rest of your ship is impervious to damage ",50,500);
+//                pen.drawString("press [F] to start",350,525);
             }
             else {// Main draw for most the game
 //                pen.drawImage(readImg, SCREEN_WIDTH/4, 0, SCREEN_WIDTH/2, 1080, null);
@@ -132,24 +140,26 @@ public class MyGame extends Game {
                     System.out.println("Error3:  " + e);
                 }
                 // Movement boolean checks DO NOT MAKE ELSE IF
-                if (moveUp) {
-                    playerRect.move("up");
-                }
-                if (moveDown) {
-                    playerRect.move("down");
-                }
-                if (moveLeft) {
-                    playerRect.move("left");
-                }
-                if (moveRight) {
-                    playerRect.move("right");
+                if(alive) {
+                    if (moveUp) {
+                        playerRect.move("up");
+                    }
+                    if (moveDown) {
+                        playerRect.move("down");
+                    }
+                    if (moveLeft) {
+                        playerRect.move("left");
+                    }
+                    if (moveRight) {
+                        playerRect.move("right");
+                    }
                 }
                 if (playerRect.get_lives() > 0) {
                     pen.setColor(Color.black);
                 } else {
                     // If player dies
                     alive = false;
-                    pen.setColor(Color.black);
+                    pen.setColor(Color.BLACK);
                     pen.drawString("Hit Enter to restart", 100, 100);
 //                    playerRect = new Player(0, 0, 0, 0);
                     playerRect.kill();

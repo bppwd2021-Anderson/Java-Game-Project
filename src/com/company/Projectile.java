@@ -27,13 +27,17 @@ public abstract class Projectile implements Entity{
      public void setParent(Entity parent){
          this.parent = parent;
      }
-     public void update(int SCREEN_WIDTH, int SCREEN_HEIGHT){
+     public void update(int SCREEN_WIDTH, int SCREEN_HEIGHT) throws IOException {
          exitScreen(SCREEN_WIDTH,SCREEN_HEIGHT);
          move();
+         if(this instanceof Burst && distTraveled > 300 && !(((Burst) this).hasBurst)){
+             ((Burst) this).burst(this.x,this.y);
+         }
      }
      public void move() {
          x+=velX;
          y+=velY;
+         distTraveled+=Math.abs(velY);
 //         if(mode.equals("left")){
 //             x+=velX;
 //         }
@@ -55,13 +59,9 @@ public abstract class Projectile implements Entity{
 //     public void target(Player target){
 //
 //     }
-     public void draw(Graphics pen, Color color) throws IOException {
+     public void draw(Graphics pen, Color color) {
          pen.setColor(color);
          pen.fillRect(x,y,width,height);
-         distTraveled+=Math.abs(velY);
-         if(this instanceof Burst && distTraveled > 300 && !(((Burst) this).hasBurst)){
-             ((Burst) this).burst(this.x,this.y);
-         }
 //         pen.drawImage(readImg,x,y,width,height+3,null);
      }
      public int giveDamage(){

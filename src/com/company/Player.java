@@ -6,6 +6,7 @@ package com.company;
 import org.w3c.dom.css.Rect;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,23 +19,22 @@ public class Player implements Entity,Shootable {
     private int xVel = 5,yVel = 5;
     private ArrayList<Projectile> kevin = new ArrayList<>();
     private boolean dead;
-    private int lives;
+    private int lives = 3;
     private Enemy target;
     private String playerImg = "img/boat.png";
     private BufferedImage readImg =  ImageIO.read(new File(playerImg));
     private int score = 0;
     private int charge = 0;
     private int slowDownLeft = 0;
-    private int burstBullets = 5;
+    private int burstBullets = 10;
     public Player(int x, int y, int width, int height) throws IOException {
         _width = width;
         _height = height;
         _x = x;
         _y = y;
-        lives = 5;
 
     }
-    public void update(int SCREEN_WIDTH, int SCREEN_HEIGHT){
+    public void update(int SCREEN_WIDTH, int SCREEN_HEIGHT) throws IOException {
         //Checking x boundaries for players
         if((this.get_x()>(SCREEN_WIDTH/2+SCREEN_WIDTH/4)-10)){
             this.set_x(this.get_x()-this.getxVel());
@@ -122,8 +122,11 @@ public class Player implements Entity,Shootable {
         lives-=5;
     }
     public void restart(){
-        lives = 5;
+        lives = 3;
         dead = false;
+    }
+    public void hurt(){
+        lives--;
     }
     public void shoot(String type) throws IOException {
         Projectile newBullet;
@@ -165,18 +168,29 @@ public class Player implements Entity,Shootable {
         // Drawing score
         pen.drawString("Score",200,500);
         pen.drawString(this.score+"",200,550);
+        // Drawing lives left
+        for (int i = 0; i < lives; i++) {
+            pen.drawImage(readImg,120+(30*i),700,30,30,null);
+        }
 
         // Drawing burst bullets left
-        pen.drawRect(1550,300,300,100);
+        pen.drawRect(1450,300,300,100);
         int temp = burstBullets;
         while (temp!=0){
-
+            if(temp<6) {
+                drawSquare(pen, 1390 + (60 * temp), 300);
+//                pen.drawRect(1390+(60*temp),300,60,50);
+            }
+            else{
+                drawSquare(pen,1090+(60*temp),350);
+//                pen.drawRect(1090+(60*temp),350,60,50);
+            }
             temp--;
         }
-        //        if(burstBullets>0){
-//            if(burstBullets > )
-//            drawSquare(pen,1550,250);
-//        }
+        for (int i = 5; i > 0; i--) {
+            pen.drawRect(1390+(60*i),300,60,50);
+            pen.drawRect(1390+(60*i),350,60,50);
+        }
 
         // Drawing slowdown bar
         pen.drawRect(200,200,50,200); // Draw outline for slowdown bar
@@ -217,8 +231,10 @@ public class Player implements Entity,Shootable {
         return score;
     }
     public void drawSquare(Graphics pen,int x,int y){
-        pen.setColor(Color.YELLOW);
-        pen.drawRect(x,y,60,50);
+        pen.setColor(Color.GREEN);
+        pen.fillRect(x,y,60,50);
+        pen.setColor(Color.BLACK);
+//        pen.drawRect(x,y,60,50);
     }
 
     @Override
