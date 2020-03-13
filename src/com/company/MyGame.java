@@ -31,7 +31,7 @@ public class MyGame extends Game {
     private Player playerRect = new Player(pX,pY,10,10);
     private int count = 0; // Akin to a framerate counter, used for cooldowns and efficiency
     private boolean moveUp,moveDown,moveLeft,moveRight; // Booleans for movement to make it smoother and nicer
-    private BufferedImage readImg = ImageIO.read(new File("img/maxresdefault.jpg/"));
+    private BufferedImage readImg = ImageIO.read(new File("img/backrgound.png/"));
     private boolean targetSet,rightClickPressed; // Used for target bullets
     private boolean shoot; // Boolean to make shooting on mouse hold rather than 1 per mouse click
     private int speed = 17; // Speed used in the thread.sleep in Game.java, can be used later to edit speed if something comes to mind
@@ -126,7 +126,8 @@ public class MyGame extends Game {
             else {// Main draw for most the game
 //                pen.drawImage(readImg, SCREEN_WIDTH/4, 0, SCREEN_WIDTH/2, 1080, null);
                 pen.setColor(Color.BLACK);
-                pen.fillRect(SCREEN_WIDTH/4, 0, SCREEN_WIDTH/2, 1080);// Filling the middle play area
+//                pen.fillRect(SCREEN_WIDTH/4, 0, SCREEN_WIDTH/2, 1080);// Filling the middle play area
+                pen.drawImage(readImg,SCREEN_WIDTH/4, 0, SCREEN_WIDTH/2, 1080,null);
 //                System.out.println("x "+SCREEN_WIDTH/4+"  x+width "+(SCREEN_WIDTH/4+SCREEN_WIDTH/2));
                 pen.setColor(Color.WHITE);
                 playerRect.draw(pen); // Draw player
