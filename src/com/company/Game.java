@@ -2,7 +2,6 @@ package com.company;
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,18 +12,18 @@ public abstract class Game implements KeyListener, MouseListener {
     boolean running;
     private MyGame game;
 
-    protected void start(String title, int width, int height) throws IOException {
+    protected void start() throws IOException {
         this.game = (MyGame) this;
         running = true;
-        frame = new JFrame(title);
+        frame = new JFrame(MyGame.TITLE);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gamePanel = new GamePanel();
         frame.getContentPane().add(BorderLayout.CENTER, gamePanel);
         frame.setResizable(false);
-        frame.setSize(width, height);
+        frame.setSize(MyGame.SCREEN_WIDTH, MyGame.SCREEN_HEIGHT);
         //-1920 puts it on the second monitor
         //0 puts it on main monitor
-        frame.setLocation(-1920,0);
+        frame.setLocation(1920,0);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);
         frame.setVisible(true);

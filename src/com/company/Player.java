@@ -162,12 +162,11 @@ public class Player implements Entity,Shootable {
         pen.setColor(Color.black);
         pen.drawRect(_x,_y,_width,_height);
         pen.drawRect(_x+1,_y+1,_width-2,_height-2); // Player's outline
-
         pen.setColor(Color.BLACK);
-
         // Drawing score
         pen.drawString("Score",200,500);
         pen.drawString(this.score+"",200,550);
+
         // Drawing lives left
         for (int i = 0; i < lives; i++) {
             pen.drawImage(readImg,120+(30*i),700,30,30,null);
@@ -193,9 +192,10 @@ public class Player implements Entity,Shootable {
         }
 
         // Drawing slowdown bar
-        pen.drawRect(200,200,50,200); // Draw outline for slowdown bar
         pen.setColor(Color.GREEN);
         pen.fillRect(201,400,49,-(this.getSlowDownLeft()*2)); // Drawing slowdown bar
+        pen.setColor(Color.BLACK);
+        pen.drawRect(200,200,50,200); // Draw outline for slowdown bar
 
 
 

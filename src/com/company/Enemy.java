@@ -1,10 +1,13 @@
 package com.company;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Enemy implements Entity,Shootable {
+public abstract class Enemy implements Entity,Shootable {
     private int _width;
     private int _height;
     private int _x;
@@ -14,17 +17,18 @@ public class Enemy implements Entity,Shootable {
     private boolean left = (Math.random() * 2 + 1 % 2 == 0),right = (Math.random() * 2 + 1 % 2 == 0),up = (Math.random() * 2 + 1 % 2 == 0),down = (Math.random() * 2 + 1 % 2 == 0);
     private boolean isTarget;
     private ArrayList<Projectile> kevin = new ArrayList<>();
-    private int health = 10;
+    private int healthMax = 10, health = healthMax;
     private boolean slowDown = false;
+//    private BufferedImage readImg =  ImageIO.read(new File("img/alien.png"));
 
-    public Enemy(int x, int y, int width, int height) {
+    public Enemy(int x, int y, int width, int height) throws IOException {
         _width = width;
         _height = height;
         _x = x;
         _y = y;
     }
 
-    public Enemy(){
+    public Enemy() throws IOException {
         _width = 0;
         _height = 0;
         _x = 0;
@@ -176,12 +180,15 @@ public class Enemy implements Entity,Shootable {
     }
 //    _x+(int)(Math.random()*100+1) >= 1149
 //    _y+randomY >= 749
-    public void draw(Graphics pen, int listCounter, ArrayList<Enemy> enemyList) throws IOException {
-        pen.fillRect(enemyList.get(listCounter).get_x(), enemyList.get(listCounter).get_y(), enemyList.get(listCounter).get_width(), enemyList.get(listCounter).get_height());
+    public void draw(Graphics pen, BufferedImage image) throws IOException {
+        pen.drawImage(image,_x,_y,225,100,null);
+        pen.fillRect(this.get_x(), this.get_y(), this.get_width(), this.get_height());
+        pen.setColor(Color.BLACK);
+        pen.drawString(health+"",this.get_x()+25,this.get_y()+25);
         pen.setColor(Color.RED);
         if(isTarget){
             pen.setColor(Color.blue);
-            pen.fillRect(enemyList.get(listCounter).get_x(), enemyList.get(listCounter).get_y(), enemyList.get(listCounter).get_width(), enemyList.get(listCounter).get_height());
+            pen.fillRect(this.get_x(), this.get_y(), this.get_width(), this.get_height());
         }
         for (Projectile bullet:kevin) {
             bullet.move();
@@ -205,6 +212,10 @@ public class Enemy implements Entity,Shootable {
 
     public int get_y() {
         return _y;
+    }
+    public void restart(){
+        health = healthMax;
+
     }
 
     public int getVelX() {
