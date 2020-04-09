@@ -16,6 +16,14 @@ public class Goblin extends Enemy{
     public ArrayList<Enemy> getEnemies(){
         return enemies;
     }
+    public void update(Player playerRect, ArrayList<Enemy> enemies){
+        move();
+        isHit(playerRect);
+        if(health<=0){
+            die(enemies);
+            playerRect.incrementScore(100);
+        }
+    }
 
 
 }

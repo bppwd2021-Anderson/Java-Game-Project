@@ -8,17 +8,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class Enemy implements Entity,Shootable {
-    private int _width;
-    private int _height;
-    private int _x;
-    private int _y;
-    private int velX = 2;
-    private int velY = 2;
-    private boolean left = (Math.random() * 2 + 1 % 2 == 0),right = (Math.random() * 2 + 1 % 2 == 0),up = (Math.random() * 2 + 1 % 2 == 0),down = (Math.random() * 2 + 1 % 2 == 0);
-    private boolean isTarget;
-    private ArrayList<Projectile> kevin = new ArrayList<>();
-    private int healthMax = 10, health = healthMax;
-    private boolean slowDown = false;
+    protected int _width;
+    protected int _height;
+    protected int _x;
+    protected int _y;
+    protected int velX = 2;
+    protected int velY = 0;
+    protected boolean left = (Math.random() * 2 + 1 % 2 == 0),right = (Math.random() * 2 + 1 % 2 == 0),up = (Math.random() * 2 + 1 % 2 == 0),down = (Math.random() * 2 + 1 % 2 == 0);
+    protected boolean isTarget;
+    protected ArrayList<Projectile> kevin = new ArrayList<>();
+    protected int healthMax = 10, health = healthMax;
+    protected boolean slowDown = false;
 //    private BufferedImage readImg =  ImageIO.read(new File("img/alien.png"));
 
     public Enemy(int x, int y, int width, int height) throws IOException {
@@ -152,16 +152,15 @@ public abstract class Enemy implements Entity,Shootable {
         slowDown = false;
     }
     public void checkBoundaries(){
-        if(_x+velX >= 840){
+        if((_x+_width)+velX >= 1440){
             right = false;
             left = true;
         }
-
-        else if(_x-velX <= 0){
+        else if(_x-velX <= 480){
             right = true;
             left = false;
         }
-        if(_y+velY >=1040){
+        if((_y+_height)+velY >=1080){
             down = false;
             up = true;
         }

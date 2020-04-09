@@ -74,6 +74,7 @@ public class MyGame extends Game {
                         enemyList.get(0).speedUp();
                 }
             }
+
             try {
                 for (int i = 0; i < enemyList.size(); i++) {
                     if (playerRect.intersects(enemyList.get(i))) {
@@ -117,11 +118,9 @@ public class MyGame extends Game {
                 }
             }
             if(imgY1>SCREEN_HEIGHT) {
-                System.out.println("Changing to 2");
                 imgY1 = -1080;
             }
             else if(imgY2>SCREEN_HEIGHT) {
-                System.out.println("Changing to 1");
                 imgY2 = -1080;
             }
             imgY2++;
