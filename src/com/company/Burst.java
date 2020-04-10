@@ -9,9 +9,10 @@ public class Burst extends Projectile {
     private int x,y;
     private int velX, velY;
     public boolean hasBurst;
+    private int distTraveled = 0;
     private int burstTimes = 2;
-    public Burst(int x, int y, int width, int height, int xVel, int yVel, Entity parent) throws IOException {
-        super(x, y, width, height, xVel, yVel, parent);
+    public Burst(int x, int y, int width, int height, int xVel, int yVel, Entity parent,int burstTimes) throws IOException {
+        super(x, y, width, height, xVel, yVel, parent, Color.green);
         this.width = width;
         this.height = height;
         this.x = x;
@@ -21,6 +22,15 @@ public class Burst extends Projectile {
         this.parent = parent;
     }
 
+    @Override
+    public void update(int SCREEN_WIDTH, int SCREEN_HEIGHT) throws IOException {
+        super.update(SCREEN_WIDTH, SCREEN_HEIGHT);
+        distTraveled+=Math.abs(velY);
+        if(distTraveled>=300){
+            burst(super.get_x(),super.get_y());
+        }
+//        System.out.println(this.x+"  "+this.y);
+    }
 
     public void burst(int currentX, int currentY) throws IOException {
         if(parent != null && parent instanceof Shootable){
@@ -52,13 +62,18 @@ public class Burst extends Projectile {
             ((Shootable)parent).createBullet(new Standard(currentX, currentY, 10, 10, -20,10,this));
 
             ((Shootable) parent).removeBullet(this); // Removes the parent bullet because we don't need it anymore
-            System.out.println("");
+//            System.out.println("BURSTING  "+currentX+"  "+currentY);
+//            System.out.println("ACTUAL    "+this.x+"  "+this.y);
         }
         //         else if(parent instanceof Player && mode.equals("target")){
 //             x -= (parent.get_x()-target.get_x())/30;
 //             y -= (parent.get_y()-target.get_y())/30;
 //         }
     }
+    public void multiBurst(){
+
+    }
+
     @Override
     public void exitScreen(int SCREEN_WIDTH, int SCREEN_HEIGHT) {
         //Checking x boundaries for players

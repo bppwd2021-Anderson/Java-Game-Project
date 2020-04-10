@@ -1,5 +1,7 @@
 package com.company;
 
+import java.awt.*;
+
 public class Bounce extends Projectile {
     private int width,height;
     private Entity parent;
@@ -7,7 +9,7 @@ public class Bounce extends Projectile {
     private int velX, velY;
     private int timesBounced = 0;
     public Bounce(int x, int y, int width, int height, int xVel, int yVel, Entity parent) {
-        super(x, y, width, height, xVel, yVel, parent);
+        super(x, y, width, height, xVel, yVel, parent, Color.pink);
         this.width = width;
         this.height = height;
         this.x = x;

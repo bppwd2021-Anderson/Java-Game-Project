@@ -12,10 +12,12 @@ public abstract class Projectile implements Entity{
      private int velX, velY;
      protected int distTraveled;
      private int damage = 1;
+     private Color color;
+     private int size;
 //     private String playerImg = "D:/Anderson/Junior Year/Java/w7/shot.png";
 //     private BufferedImage readImg =  ImageIO.read(new File(playerImg));
 
-     public Projectile(int x, int y, int width, int height,int xVel, int yVel, Entity parent) {
+     public Projectile(int x, int y, int width, int height,int xVel, int yVel, Entity parent,Color color) {
          this.width = width;
          this.height = height;
          this.x = x;
@@ -23,6 +25,8 @@ public abstract class Projectile implements Entity{
          this.velX = xVel;
          this.velY = yVel;
          this.parent = parent;
+         this.color = color;
+         this.size = width;
      }
      public void setParent(Entity parent){
          this.parent = parent;
@@ -30,14 +34,13 @@ public abstract class Projectile implements Entity{
      public void update(int SCREEN_WIDTH, int SCREEN_HEIGHT) throws IOException {
          exitScreen(SCREEN_WIDTH,SCREEN_HEIGHT);
          move();
-         if(this instanceof Burst && distTraveled > 300 && !(((Burst) this).hasBurst)){
-             ((Burst) this).burst(this.x,this.y);
-         }
+//         if(this instanceof Burst && distTraveled > 300 && !(((Burst) this).hasBurst)){
+//             ((Burst) this).burst(this.x,this.y);
+//         }
      }
      public void move() {
          x+=velX;
          y+=velY;
-         distTraveled+=Math.abs(velY);
 //         if(mode.equals("left")){
 //             x+=velX;
 //         }
@@ -59,9 +62,9 @@ public abstract class Projectile implements Entity{
 //     public void target(Player target){
 //
 //     }
-     public void draw(Graphics pen, Color color) {
+     public void draw(Graphics pen) {
          pen.setColor(color);
-         pen.fillRect(x,y,width,height);
+         pen.fillRect(x,y,size,size);
 //         pen.drawImage(readImg,x,y,width,height+3,null);
      }
      public int giveDamage(){

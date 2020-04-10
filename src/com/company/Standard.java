@@ -1,5 +1,6 @@
 package com.company;
 
+import java.awt.*;
 import java.io.IOException;
 public class Standard extends Projectile {
     private int width,height;
@@ -7,7 +8,7 @@ public class Standard extends Projectile {
     private int x,y;
     private int velX, velY;
     public Standard(int x, int y, int width, int height, int xVel, int yVel, Entity parent) throws IOException {
-        super(x, y, width, height, xVel, yVel, parent);
+        super(x, y, width, height, xVel, yVel, parent, Color.yellow);
         this.width = width;
         this.height = height;
         this.x = x;

@@ -26,7 +26,7 @@ public class Player implements Entity,Shootable {
     private int score = 0;
     private int charge = 0;
     private int slowDownLeft = 0;
-    private int burstBullets = 10;
+    private int burstBullets = 10, counter = 0;
     public Player(int x, int y, int width, int height) throws IOException {
         _width = width;
         _height = height;
@@ -36,6 +36,7 @@ public class Player implements Entity,Shootable {
     }
     public void update(int SCREEN_WIDTH, int SCREEN_HEIGHT) throws IOException {
         //Checking x boundaries for players
+        counter++;
         if((this.get_x()>(SCREEN_WIDTH/2+SCREEN_WIDTH/4)-10)){
             this.set_x(this.get_x()-this.getxVel());
         }
@@ -128,15 +129,14 @@ public class Player implements Entity,Shootable {
     public void hurt(){
         lives--;
     }
-    public void shoot(String type) throws IOException {
+    public void shoot(String type, int times) throws IOException {
         Projectile newBullet;
         switch (type) {
             case "super":
-//                barrage of bullets? some kind of charged shot
                 System.out.println("pow");
             case "burst":
                 if(burstBullets > 0){
-                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 15, 15, 0, -5, this);
+                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 15, 15, 0, -5, this, 1);
                     burstBullets--;
                 }
                 else
@@ -149,7 +149,7 @@ public class Player implements Entity,Shootable {
                 newBullet = new Tracking(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -5, this);
                 break;
             default:
-                newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, -5, this);
+                newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 16, 16, 0, -5, this);
                 break;
         }
         newBullet.setParent(this);
@@ -197,18 +197,10 @@ public class Player implements Entity,Shootable {
         pen.setColor(Color.BLACK);
         pen.drawRect(200,200,50,200); // Draw outline for slowdown bar
 
-
-
-
         // Drawing bullets
         for (int i = 0; i < kevin.size(); i++) {
             kevin.get(i).move();
-            if(kevin.get(i) instanceof Burst) {
-                kevin.get(i).draw(pen, Color.GREEN);
-            }
-            else if(kevin.get(i) instanceof Standard){
-                kevin.get(i).draw(pen, Color.YELLOW);
-            }
+            kevin.get(i).draw(pen);
         }
     }
 
@@ -278,5 +270,9 @@ public class Player implements Entity,Shootable {
 
     public void set_y(int i) {
         _y = i;
+    }
+
+    public int getCounter() {
+        return counter;
     }
 }

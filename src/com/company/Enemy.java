@@ -34,7 +34,7 @@ public abstract class Enemy implements Entity,Shootable {
         _x = 0;
         _y = 0;
     }
-    public void update(Player playerRect, ArrayList<Enemy> enemies){
+    public void update(Player playerRect, ArrayList<Enemy> enemies) throws IOException {
         isHit(playerRect);
         if(health<=0){
             die(enemies);
@@ -83,12 +83,12 @@ public abstract class Enemy implements Entity,Shootable {
         kevin.add(projectile);
     }
 
-    public void shoot(String type) throws IOException {
+    public void shoot(String type, int times) throws IOException {
         Projectile newBullet;
         if(!slowDown) {
             switch (type) {
                 case "burst":
-                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
+                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this, times);
                     break;
                 case "bounce":
                     newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
@@ -104,7 +104,7 @@ public abstract class Enemy implements Entity,Shootable {
         else {
             switch (type) {
                 case "burst":
-                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 5, this);
+                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 5, this, times);
                     break;
                 case "bounce":
                     newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 5, this);
@@ -191,7 +191,7 @@ public abstract class Enemy implements Entity,Shootable {
         }
         for (Projectile bullet:kevin) {
             bullet.move();
-            bullet.draw(pen,Color.CYAN);
+            bullet.draw(pen);
         }
 //        System.out.println(kevin.size());
     }

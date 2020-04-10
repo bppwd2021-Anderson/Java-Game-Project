@@ -5,7 +5,7 @@ import java.io.IOException;
 public interface Shootable {
     boolean intersects(Entity bullet);
 
-    void shoot(String type) throws IOException;
+    void shoot(String type, int times) throws IOException;
 
     void createBullet(Projectile projectile);
 

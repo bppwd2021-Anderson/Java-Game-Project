@@ -90,7 +90,7 @@ public class MyGame extends Game {
             }
             if(shoot && count%5==0) { // Shooting on boolean for better shooting plus cooldown of 5-ish frames per shot
                 try {
-                        playerRect.shoot("default");
+                        playerRect.shoot("default",1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -225,13 +225,13 @@ public class MyGame extends Game {
         //Testing enemy shooting
         if(ke.getKeyCode() == KeyEvent.VK_Q){
             try {
-                enemyList.get(0).shoot("default");
+                enemyList.get(0).shoot("default",1);
             } catch (IOException e) {}
         }
         //Player burst shot
         if(ke.getKeyCode() == KeyEvent.VK_SPACE){
             try {
-                playerRect.shoot("burst");
+                playerRect.shoot("burst",1);
             } catch (IOException e) {}
         }
         //Quit Game
@@ -249,8 +249,8 @@ public class MyGame extends Game {
             enemyList.get(0).speedUp();
         }
         if (ke.getKeyCode() == KeyEvent.VK_H){
-            System.out.println("ImgY1 = "+ imgY1 + "  ImgY2 = " + imgY2);
-            System.out.println();
+            System.out.println(((Goblin) enemyList.get(0)).getCounter());
+            System.out.println(playerRect.getCounter());
         }
 
     }
