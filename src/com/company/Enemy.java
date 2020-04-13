@@ -88,16 +88,16 @@ public abstract class Enemy implements Entity,Shootable {
         if(!slowDown) {
             switch (type) {
                 case "burst":
-                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this, times);
+                    newBullet = new Burst(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 5, this, times);
                     break;
                 case "bounce":
-                    newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
+                    newBullet = new Bounce(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 5, this);
                     break;
                 case "Tracking":
-                    newBullet = new Tracking(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
+                    newBullet = new Tracking(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 5, this);
                     break;
                 default:
-                    newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 20, this);
+                    newBullet = new Standard(this._x + (this.get_width() / 2) - 10, this._y + (this.get_height() / 2), 10, 10, 0, 5, this);
                     break;
             }
         }

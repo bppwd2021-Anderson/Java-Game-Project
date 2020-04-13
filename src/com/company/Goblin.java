@@ -29,7 +29,7 @@ public class Goblin extends Enemy{
         counter++;
     }
     public void attackPattern() throws IOException {
-        if((System.currentTimeMillis()-lastShot)/1000 == 3){
+        if((System.currentTimeMillis()-lastShot)/1000 == 1){
             shoot("burst",3);
             lastShot = System.currentTimeMillis();
         }
